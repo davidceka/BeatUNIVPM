@@ -48,7 +48,7 @@ public class Hit : MonoBehaviour
         // Rileva se le condizioni sono soddisfatte e attiva il power up
         if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue)
         {
-            scoreManager.reward = 20;
+            scoreManager.reward = 40;
             powerUp.active = true;
         }
         
@@ -61,7 +61,7 @@ public class Hit : MonoBehaviour
             if (powerUp.slider.value <= 0.3f)
             {
                 powerUp.active = false;
-                scoreManager.reward = 10;
+                scoreManager.reward = 20;
             }
         }
     }
