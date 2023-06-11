@@ -48,7 +48,7 @@ public class Hit : MonoBehaviour
         // Rileva se le condizioni sono soddisfatte e attiva il power up
         if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue)
         {
-            scoreManager.reward = 40;
+            scoreManager.reward = 20;
             powerUp.active = true;
         }
         
@@ -61,7 +61,7 @@ public class Hit : MonoBehaviour
             if (powerUp.slider.value <= 0.3f)
             {
                 powerUp.active = false;
-                scoreManager.reward = 20;
+                scoreManager.reward = 10;
             }
         }
     }
@@ -99,6 +99,25 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.DecreaseScore(scoreManager.penalty); // Applica una penalità
             }
+            Destroy(sphere); // Distruzione del cubo
+        }
+        else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
+        {
+            GameObject sphere = collision.gameObject; // Cubo bomba
+            
+            // Rimuovi il cubo bomba dalla lista dei cubi generati
+            if (spawn.spawnedSpheres.Contains(sphere))
+            {
+                spawn.spawnedSpheres.Remove(sphere);
+            }
+            scoreManager.DecreaseScore(scoreManager.reward); // Decrementa il punteggio di una quantità pari al reward
+            powerUp.slider.value = 0.3f; // Decrementa instantaneamente la barra dei power up
+            if (powerUp.active)
+            {
+                powerUp.active = false; // Disattiva il power up
+                scoreManager.reward = 10;
+            }
+            
             Destroy(sphere); // Distruzione del cubo
         }
     }

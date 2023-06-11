@@ -439,6 +439,7 @@ MonoBehaviour:
   spheres:
   - {fileID: 4379130320299493987, guid: 17c5a9ccda19dd2478f52ae983219959, type: 3}
   - {fileID: 6934363368590734946, guid: 2edbbe2a7f9726c4ab6d673e2b446ce0, type: 3}
+  - {fileID: 7135708454211431529, guid: c35938609af8945438e6d731be8c48c0, type: 3}
   spawnedSpheres: []
   points:
   - {fileID: 912580826}
@@ -632,7 +633,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -653,7 +654,7 @@ LineRenderer:
   m_GameObject: {fileID: 482526194}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 0

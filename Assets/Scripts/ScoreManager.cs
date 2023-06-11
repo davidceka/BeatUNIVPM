@@ -7,7 +7,7 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public int score = 0; // Punteggio del giocatore
-    public int reward = 20; // Premio che si ottine per aver colpito un cubo con l'arma giusta
+    public int reward = 10; // Premio che si ottine per aver colpito un cubo con l'arma giusta
     public int penalty = 5; // Penalità per aver colpito un cubo con l'arma sbagliata
     private TMP_Text _scoreTextMesh;
     // Start is called before the first frame update
@@ -43,6 +43,11 @@ public class ScoreManager : MonoBehaviour
         if (score > 0)
         {
             score -= value;
+        }
+
+        if (score < 0)
+        {
+            score = 0;
         }
         ViewScore(); // Visualizza lo score nella scena e sulla console
     }

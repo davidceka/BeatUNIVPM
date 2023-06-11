@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ScoreText
   - Bar
+  - Bomba
   layers:
   - Default
   - TransparentFX
