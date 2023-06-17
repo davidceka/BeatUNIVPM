@@ -20,6 +20,10 @@ public class Hit : MonoBehaviour
     // Secondo Gruppo
     public KeyCode button = KeyCode.Space;
     private bool _isButtonPressed = false; // Per capire se il tasto è premuto
+    
+    // Terzo gruppo
+    public GameObject particleObj;
+    private ParticleSystem _particles;
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +80,11 @@ public class Hit : MonoBehaviour
             GameObject sphere = collision.gameObject;
             Color sphereColor = sphere.GetComponent<Renderer>().material.color;
             Color swordColor = GetComponent<Renderer>().material.color;
+            
+            // inizializzo le particelle nella stessa posizione dei cubi
+            GameObject particles = Instantiate(particleObj, sphere.transform.position, Quaternion.identity);
+            ParticleSystem particleSys = particles.GetComponent<ParticleSystem>();
+            particleSys.GetComponent<Renderer>().material.color = sphere.GetComponent<Renderer>().material.color;
 
             // Rimuovi il cubo dalla lista dei cubi generati
             if (spawn.spawnedSpheres.Contains(sphere))
@@ -100,10 +109,16 @@ public class Hit : MonoBehaviour
             }
             
             Destroy(sphere); // Distruzione del cubo
+            particleSys.Play(); // Avvia le particelle
         }
         else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
         {
             GameObject sphere = collision.gameObject; // Cubo bomba
+            
+            // inizializzo le particelle nella stessa posizione dei cubi
+            GameObject particles = Instantiate(particleObj, sphere.transform.position, Quaternion.identity);
+            ParticleSystem particleSys = particles.GetComponent<ParticleSystem>();
+            particleSys.GetComponent<Renderer>().material.color = sphere.GetComponent<Renderer>().material.color;
             
             // Rimuovi il cubo bomba dalla lista dei cubi generati
             if (spawn.spawnedSpheres.Contains(sphere))
@@ -119,6 +134,7 @@ public class Hit : MonoBehaviour
             }
             
             Destroy(sphere); // Distruzione del cubo
+            particleSys.Play(); // Avvia le particelle
         }
     }
 }

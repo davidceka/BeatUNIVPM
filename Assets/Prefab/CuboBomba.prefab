@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2660644995031142960}
   - component: {fileID: 593818687791352779}
   - component: {fileID: 8492510545303183861}
+  - component: {fileID: 2842436542205850538}
   m_Layer: 0
   m_Name: CuboBomba
   m_TagString: Bomba
@@ -196,3 +197,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!122 &2842436542205850538
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7135708454211431529}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_Size: 5

@@ -151,6 +151,8 @@ MonoBehaviour:
   scoreManager: {fileID: 0}
   powerUp: {fileID: 0}
   button: 32
+  particleObj: {fileID: 7310023776105734892, guid: 40b9a35318b9fc84bbd6e952508c683f,
+    type: 3}
 --- !u!108 &5809174091028833930
 Light:
   m_ObjectHideFlags: 0
