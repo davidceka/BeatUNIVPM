@@ -15,7 +15,7 @@ public class PowerUp : MonoBehaviour
     /// ( NOTA: non è stato implementato ancora nulla con la percentuale )
     /// </summary>
     public float currentValue = 0f; // Valore attuale della barra
-    public float maxValue = 20f; // Valore massimo della barra
+    public float maxValue = 30f; // Valore massimo della barra
     
     public Slider slider; // Slider per scorrimento della barra
     public bool active = false; // Variabile booleana per verificare se il power up è attivo

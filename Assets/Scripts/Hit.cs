@@ -46,7 +46,7 @@ public class Hit : MonoBehaviour
         }
         
         // Rileva se le condizioni sono soddisfatte e attiva il power up
-        if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue)
+        if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
             scoreManager.reward = 20;
             powerUp.active = true;
@@ -69,7 +69,6 @@ public class Hit : MonoBehaviour
     // Metodo per la gestione della collisione tra le armi e gli spawn
     private void OnCollisionEnter(Collision collision)
     {
-        
         // Controlla se la collisione è avvenuta con un cubo
         if (collision.gameObject.CompareTag("Respawn"))
         {
@@ -89,7 +88,7 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
                 
-                // Incremento la barra dei power up, se attivo un power up
+                // Incremento la barra dei power up, se non attivo un power up
                 if (!powerUp.active)
                 {
                     powerUp.IncreaseBar(scoreManager.reward);
@@ -99,6 +98,7 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.DecreaseScore(scoreManager.penalty); // Applica una penalità
             }
+            
             Destroy(sphere); // Distruzione del cubo
         }
         else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
