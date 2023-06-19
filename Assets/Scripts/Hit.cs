@@ -20,6 +20,10 @@ public class Hit : MonoBehaviour
     // Secondo Gruppo
     public KeyCode button = KeyCode.Space;
     private bool _isButtonPressed = false; // Per capire se il tasto è premuto
+    
+    // Terzo gruppo
+    public GameObject particleObj;
+    private ParticleSystem _particles;
 
     // Start is called before the first frame update
     void Start()
@@ -46,9 +50,9 @@ public class Hit : MonoBehaviour
         }
         
         // Rileva se le condizioni sono soddisfatte e attiva il power up
-        if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue)
+        if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
-            scoreManager.reward = 40;
+            scoreManager.reward = 20;
             powerUp.active = true;
         }
         
@@ -61,7 +65,7 @@ public class Hit : MonoBehaviour
             if (powerUp.slider.value <= 0.3f)
             {
                 powerUp.active = false;
-                scoreManager.reward = 20;
+                scoreManager.reward = 10;
             }
         }
     }
@@ -69,7 +73,6 @@ public class Hit : MonoBehaviour
     // Metodo per la gestione della collisione tra le armi e gli spawn
     private void OnCollisionEnter(Collision collision)
     {
-        
         // Controlla se la collisione è avvenuta con un cubo
         if (collision.gameObject.CompareTag("Respawn"))
         {
@@ -77,6 +80,11 @@ public class Hit : MonoBehaviour
             GameObject sphere = collision.gameObject;
             Color sphereColor = sphere.GetComponent<Renderer>().material.color;
             Color swordColor = GetComponent<Renderer>().material.color;
+            
+            // inizializzo le particelle nella stessa posizione dei cubi
+            GameObject particles = Instantiate(particleObj, sphere.transform.position, Quaternion.identity);
+            ParticleSystem particleSys = particles.GetComponent<ParticleSystem>();
+            particleSys.GetComponent<Renderer>().material.color = sphere.GetComponent<Renderer>().material.color;
 
             // Rimuovi il cubo dalla lista dei cubi generati
             if (spawn.spawnedSpheres.Contains(sphere))
@@ -89,7 +97,7 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
                 
-                // Incremento la barra dei power up, se attivo un power up
+                // Incremento la barra dei power up, se non attivo un power up
                 if (!powerUp.active)
                 {
                     powerUp.IncreaseBar(scoreManager.reward);
@@ -99,7 +107,34 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.DecreaseScore(scoreManager.penalty); // Applica una penalità
             }
+            
             Destroy(sphere); // Distruzione del cubo
+            particleSys.Play(); // Avvia le particelle
+        }
+        else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
+        {
+            GameObject sphere = collision.gameObject; // Cubo bomba
+            
+            // inizializzo le particelle nella stessa posizione dei cubi
+            GameObject particles = Instantiate(particleObj, sphere.transform.position, Quaternion.identity);
+            ParticleSystem particleSys = particles.GetComponent<ParticleSystem>();
+            particleSys.GetComponent<Renderer>().material.color = sphere.GetComponent<Renderer>().material.color;
+            
+            // Rimuovi il cubo bomba dalla lista dei cubi generati
+            if (spawn.spawnedSpheres.Contains(sphere))
+            {
+                spawn.spawnedSpheres.Remove(sphere);
+            }
+            scoreManager.DecreaseScore(scoreManager.reward); // Decrementa il punteggio di una quantità pari al reward
+            powerUp.slider.value = 0.3f; // Decrementa instantaneamente la barra dei power up
+            if (powerUp.active)
+            {
+                powerUp.active = false; // Disattiva il power up
+                scoreManager.reward = 10;
+            }
+            
+            Destroy(sphere); // Distruzione del cubo
+            particleSys.Play(); // Avvia le particelle
         }
     }
 }

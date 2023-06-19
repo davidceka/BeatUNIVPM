@@ -11,7 +11,7 @@ public class Synch : MonoBehaviour
     public List<GameObject> spawnedSpheres = new List<GameObject>(); // Lista dei cubi istanziati
     public Transform[] points;
     public float moveSpeed; // Velocità di movimento dei cubi
-    
+
     public Transform player;
     private float _playerPosZ; // Posizione sull'asse z del giocatore
 
@@ -80,7 +80,7 @@ public class Synch : MonoBehaviour
             // ( NOTA: Il giocatore si trova dietro rispetto allo spawner )
             GameObject sphere = spawnedSpheres[i];
             sphere.transform.Translate(Vector3.back * distanceToMove);
-            
+
             // Calcolo ad ogni frame la posizione dei cubi lungo l'asse Z
             // E la distanza rispetto alla posizione lungo l'asse Z del giocatore
             float spherePosZ = sphere.transform.position.z;
