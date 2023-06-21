@@ -5,6 +5,7 @@ using UnityEngine;
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
 {
+    public PowerUp powerUp;
     private static Synch _spawn; // Campo statico per il riferimento a Synch (Utilizzato in "Hit")
     
     public GameObject[] spheres;
@@ -25,6 +26,8 @@ public class Synch : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
         _playerPosZ = player.position.z; // Calcola la posizione del giocatore sull'asse Z
         _musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
+        
+        powerUp = FindObjectOfType<PowerUp>();
     }
 
     // Coroutine per l'istanziazione dei cubi
@@ -97,9 +100,19 @@ public class Synch : MonoBehaviour
             // Verifica se la sfera ha raggiunto il giocatore
             if (distance < 0.1f)
             {
-                Destroy(sphere);
-                spawnedSpheres.RemoveAt(i);
-                i--; // Aggiorna l'indice dopo la rimozione
+                if (sphere.CompareTag("Bomba"))
+                {
+                    Destroy(sphere);
+                    spawnedSpheres.RemoveAt(i);
+                    i--; // Aggiorna l'indice dopo la rimozione
+                }
+                else
+                {
+                    Destroy(sphere);
+                    spawnedSpheres.RemoveAt(i);
+                    i--; // Aggiorna l'indice dopo la rimozione
+                    powerUp.DecreaseHealth(5f);
+                }
             }
         }
     }

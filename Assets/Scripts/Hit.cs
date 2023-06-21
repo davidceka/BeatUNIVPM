@@ -96,6 +96,7 @@ public class Hit : MonoBehaviour
             if (swordColor == sphereColor)
             {
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
+                powerUp.IncreaseHealth(scoreManager.reward); // Incrementa la vita del giocatore
                 
                 // Incremento la barra dei power up, se non attivo un power up
                 if (!powerUp.active)
@@ -109,8 +110,9 @@ public class Hit : MonoBehaviour
             }
             
             Destroy(sphere); // Distruzione del cubo
+            
             particleSys.Play(); // Avvia le particelle
-            Destroy(particles, 2.0f);
+            Destroy(particles, 2.0f); // Distruzione delle particelle
         }
         else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
         {
@@ -126,8 +128,11 @@ public class Hit : MonoBehaviour
             {
                 spawn.spawnedSpheres.Remove(sphere);
             }
+            
             scoreManager.DecreaseScore(scoreManager.reward); // Decrementa il punteggio di una quantità pari al reward
             powerUp.slider.value = 0.3f; // Decrementa instantaneamente la barra dei power up
+            powerUp.DecreaseHealth(scoreManager.reward); // Decrementa la vita di una quantità pari al reward
+            
             if (powerUp.active)
             {
                 powerUp.active = false; // Disattiva il power up
@@ -135,10 +140,9 @@ public class Hit : MonoBehaviour
             }
             
             Destroy(sphere); // Distruzione del cubo
+            
             particleSys.Play(); // Avvia le particelle
-
-            Destroy(particles, 2.0f);
-
+            Destroy(particles, 2.0f); // Distruzione delle particelle
         }
     }
 }
