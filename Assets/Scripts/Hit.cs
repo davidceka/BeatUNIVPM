@@ -110,6 +110,7 @@ public class Hit : MonoBehaviour
             
             Destroy(sphere); // Distruzione del cubo
             particleSys.Play(); // Avvia le particelle
+            Destroy(particles, 2.0f);
         }
         else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
         {
@@ -135,6 +136,9 @@ public class Hit : MonoBehaviour
             
             Destroy(sphere); // Distruzione del cubo
             particleSys.Play(); // Avvia le particelle
+
+            Destroy(particles, 2.0f);
+
         }
     }
 }
