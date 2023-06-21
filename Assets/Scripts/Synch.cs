@@ -43,7 +43,15 @@ public class Synch : MonoBehaviour
     private void SpawnSphere()
     {
         // Il cubo si genera randomicamente da uno dei punti di spawn
-        GameObject sphere = Instantiate(spheres[Random.Range(0, spheres.Length)], points[Random.Range(0, points.Length)]);
+        GameObject sphere;
+        int randomNumber = UnityEngine.Random.Range(0, 101);
+        if (randomNumber >= 0 && randomNumber <= 10)
+            sphere = Instantiate(spheres[2], points[Random.Range(0, points.Length)]);
+        else if (randomNumber >=11 && randomNumber <= 55)
+            sphere = Instantiate(spheres[1], points[Random.Range(0, points.Length)]);
+        else
+            sphere = Instantiate(spheres[0], points[Random.Range(0, points.Length)]);
+
         sphere.transform.localPosition = Vector3.zero;
         // Lo spawn può avvenire con un angolazione diversa
         sphere.transform.Rotate(Vector3.forward, 90f * Random.Range(0, 4));
