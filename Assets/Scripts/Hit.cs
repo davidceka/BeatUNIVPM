@@ -97,6 +97,7 @@ public class Hit : MonoBehaviour
             {
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
                 powerUp.IncreaseHealth(scoreManager.reward); // Incrementa la vita del giocatore
+                scoreManager.count += 1; // Incrementa il contatore combo di una unità
                 
                 // Incremento la barra dei power up, se non attivo un power up
                 if (!powerUp.active)
@@ -107,6 +108,7 @@ public class Hit : MonoBehaviour
             else
             {
                 scoreManager.DecreaseScore(scoreManager.penalty); // Applica una penalità
+                scoreManager.count = 0; // Fa il reset a zero del contatore combo
             }
             
             Destroy(sphere); // Distruzione del cubo
@@ -132,6 +134,7 @@ public class Hit : MonoBehaviour
             scoreManager.DecreaseScore(scoreManager.reward); // Decrementa il punteggio di una quantità pari al reward
             powerUp.slider.value = 0.3f; // Decrementa instantaneamente la barra dei power up
             powerUp.DecreaseHealth(scoreManager.reward); // Decrementa la vita di una quantità pari al reward
+            scoreManager.count = 0; // Fa il reset a zero del contatore combo
             
             if (powerUp.active)
             {

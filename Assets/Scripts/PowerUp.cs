@@ -8,23 +8,21 @@ using Slider = UnityEngine.UI.Slider;
 // CLASSE PER LA GESTIONE DEI POWER UP
 public class PowerUp : MonoBehaviour
 {
-    /// <summary>
-    /// Variabili che potrebbero servire per gestire
-    /// la percentuali di completamento della barra
-    /// dei power up
-    /// ( NOTA: non è stato implementato ancora nulla con la percentuale )
-    /// </summary>
-    ///
+    public Synch spawn; // Riferimento alla classe Synch
+    
     public Slider slider; // Slider per scorrimento della barra
     public Slider health; // Slider per vita
     
     public bool active = false; // Variabile booleana per verificare se il power up è attivo
     public bool isGameOver = false; // Variabile booleana per identificare il Game Over
     public float time = 0f; // Variabile per il conteggio del tempo
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        // Si dichiara dove trovare i riferimenti agli oggetti della classe Synch
+        spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
+        
         // setta i valori di min e max degli slider
         
         slider.minValue = 0.3f;
@@ -99,7 +97,8 @@ public class PowerUp : MonoBehaviour
     // Metodo che implementa il Game Over
     public void GameOver()
     {
-        Time.timeScale = 0;
+        Time.timeScale = 0; // Blocca il gioco
+        spawn.musicSource.Stop(); // Blocca la musica
         isGameOver = true;
         // Manca l'istruzione per caricare la scena del Game Over
     }

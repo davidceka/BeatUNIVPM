@@ -5,7 +5,9 @@ using UnityEngine;
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
 {
+    // Gruppo di variabili per riferimenti alle altre classi
     public PowerUp powerUp;
+    public ScoreManager scoreManager;
     private static Synch _spawn; // Campo statico per il riferimento a Synch (Utilizzato in "Hit")
     
     public GameObject[] spheres;
@@ -16,7 +18,7 @@ public class Synch : MonoBehaviour
     public Transform player;
     private float _playerPosZ; // Posizione sull'asse z del giocatore
 
-    private AudioSource _musicSource; // Componente AudioSource per la musica
+    public AudioSource musicSource; // Componente AudioSource per la musica
     private Coroutine _spawnCoroutine; // Riferimento alla coroutine di spawn delle sfere
     public float beat = (60f / 105f) * 2f;
     
@@ -25,9 +27,11 @@ public class Synch : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
         _playerPosZ = player.position.z; // Calcola la posizione del giocatore sull'asse Z
-        _musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
+        musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
         
+        // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi:
         powerUp = FindObjectOfType<PowerUp>();
+        scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     // Coroutine per l'istanziazione dei cubi
@@ -68,11 +72,11 @@ public class Synch : MonoBehaviour
         MoveSpheres();
         
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi
-        if (_musicSource.isPlaying && _spawnCoroutine == null)
+        if (musicSource.isPlaying && _spawnCoroutine == null)
         {
             _spawnCoroutine = StartCoroutine(SpawnSphereCoroutine());
         }
-        else if (!_musicSource.isPlaying && _spawnCoroutine != null)
+        else if (!musicSource.isPlaying && _spawnCoroutine != null)
         {
             StopCoroutine(_spawnCoroutine);
             _spawnCoroutine = null;
@@ -97,21 +101,22 @@ public class Synch : MonoBehaviour
             float spherePosZ = sphere.transform.position.z;
             float distance = Mathf.Abs(spherePosZ - _playerPosZ);
             
-            // Verifica se la sfera ha raggiunto il giocatore
+            // Verifica se il cubo ha raggiunto il giocatore
             if (distance < 0.1f)
             {
                 if (sphere.CompareTag("Bomba"))
                 {
-                    Destroy(sphere);
-                    spawnedSpheres.RemoveAt(i);
+                    Destroy(sphere); // Distrugge il cubo
+                    spawnedSpheres.RemoveAt(i); // Rimuove il cubo dalla lista dei cubi
                     i--; // Aggiorna l'indice dopo la rimozione
                 }
                 else
                 {
-                    Destroy(sphere);
-                    spawnedSpheres.RemoveAt(i);
+                    Destroy(sphere); // Distrugge il cubo
+                    spawnedSpheres.RemoveAt(i); // Rimuove il cubo dalla lista dei cubi
                     i--; // Aggiorna l'indice dopo la rimozione
-                    powerUp.DecreaseHealth(5f);
+                    powerUp.DecreaseHealth(5f); // Decrementa la vita del giocatore
+                    scoreManager.count = 0; // Fa il reset a zero del contatore combo
                 }
             }
         }
