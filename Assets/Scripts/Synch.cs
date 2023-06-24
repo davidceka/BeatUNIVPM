@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Globalization;
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
@@ -11,8 +13,11 @@ public class Synch : MonoBehaviour
     private static Synch _spawn; // Campo statico per il riferimento a Synch (Utilizzato in "Hit")
     
     public GameObject[] spheres;
+    public GameObject sphere;
     public List<GameObject> spawnedSpheres = new List<GameObject>(); // Lista dei cubi istanziati
     public Transform[] points;
+    public string filename; // Nome del file da cui leggere il pattern
+    private string _filepath; // Percorso del file da cui leggere il pattern
     public float moveSpeed; // Velocità di movimento dei cubi
 
     public Transform player;
@@ -27,19 +32,81 @@ public class Synch : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
         _playerPosZ = player.position.z; // Calcola la posizione del giocatore sull'asse Z
+        
         musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
         
+        filename = "trace_test.txt";
+        _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
+
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi:
         powerUp = FindObjectOfType<PowerUp>();
         scoreManager = FindObjectOfType<ScoreManager>();
     }
 
-    // Coroutine per l'istanziazione dei cubi
+    // Coroutine per la lettura del file txt e l'avvio del pattern descritto
+    private IEnumerator SpawnSphereCoroutine()
+    {
+        while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
+        {
+            if (File.Exists(_filepath))
+            {
+                string[] lines = File.ReadAllLines(_filepath);
+
+                foreach (string line in lines)
+                {
+                    string[] data = line.Split(' '); // Dividi la riga per ottenere l'indice del cubo e le coordinate di spawn
+
+                    if (data.Length == 2)
+                    {
+                        int sphereindex = int.Parse(data[0]);
+                        
+                        // Rimuovi parentesi quadre e separa le coordinate
+                        string[] coordinates = data[1].Trim('[', ']').Split(',');
+
+                        if (coordinates.Length == 3)
+                        {
+                            // Ottieni x,y,z dalla lista cordinates
+                            float x = float.Parse(coordinates[0], CultureInfo.InvariantCulture);
+                            float y = float.Parse(coordinates[1], CultureInfo.InvariantCulture);
+                            float z = float.Parse(coordinates[2], CultureInfo.InvariantCulture);
+                            // Calcolo della posizione
+                            Vector3 position = new Vector3(x, y, z);
+                            // Richiama il metodo per istanziare il cubo
+                            SpawnSphere(sphereindex, position);
+                        }
+                        else
+                        {
+                            // In caso di formattazione delle coordinate non corretta
+                            Debug.Log("Cordinates Error");
+                        }
+                    }
+                
+                    // Espressione che viene utilizzata all'interno di un metodo coroutine
+                    // in Unity per creare un ritardo di tempo specifico (in questo caso, il beat)
+                    yield return new WaitForSeconds(beat);
+                }
+            }
+            else
+            {
+                // Qualora il percorso del file indicato fosse errato
+                Debug.Log("File not found: " + _filepath);
+            }
+        }
+    }
+
+    // Metodo per l'instanziazione di un cubo
+    private void SpawnSphere(int index, Vector3 point)
+    {
+        sphere = Instantiate(spheres[index], point, Quaternion.identity);
+        spawnedSpheres.Add(sphere); // Il cubo creato viene aggiunto alla lista di elementi
+    }
+    
+/*
     private IEnumerator SpawnSphereCoroutine()
     {
         while (true)
         {
-            SpawnSphere();
+            SpawnSphereTest();
             // Espressione che viene utilizzata all'interno di un metodo coroutine
             // in Unity per creare un ritardo di tempo specifico (in questo caso, il beat)
             yield return new WaitForSeconds(beat);
@@ -65,6 +132,7 @@ public class Synch : MonoBehaviour
 
         spawnedSpheres.Add(sphere); // Il cubo creato viene aggiunto alla lista di elementi
     }
+*/
 
     // Update is called once per frame
     void Update()

@@ -382,6 +382,7 @@ MonoBehaviour:
   - {fileID: 4379130320299493987, guid: 17c5a9ccda19dd2478f52ae983219959, type: 3}
   - {fileID: 6934363368590734946, guid: 2edbbe2a7f9726c4ab6d673e2b446ce0, type: 3}
   - {fileID: 7135708454211431529, guid: c35938609af8945438e6d731be8c48c0, type: 3}
+  sphere: {fileID: 0}
   spawnedSpheres: []
   points:
   - {fileID: 912580826}
@@ -389,6 +390,7 @@ MonoBehaviour:
   - {fileID: 1630582449}
   - {fileID: 1416015039}
   - {fileID: 328814349}
+  filename: 
   moveSpeed: 3
   player: {fileID: 1186536317}
   musicSource: {fileID: 0}
