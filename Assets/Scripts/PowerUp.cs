@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Slider = UnityEngine.UI.Slider;
+using UnityEngine.SceneManagement;
 
 // CLASSE PER LA GESTIONE DEI POWER UP
 public class PowerUp : MonoBehaviour
@@ -100,7 +101,7 @@ public class PowerUp : MonoBehaviour
         Time.timeScale = 0; // Blocca il gioco
         spawn.musicSource.Stop(); // Blocca la musica
         isGameOver = true;
-        // Manca l'istruzione per caricare la scena del Game Over
+        SceneManager.LoadScene("LoseScreen");
     }
 
     /// <summary>
