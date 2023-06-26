@@ -390,8 +390,9 @@ MonoBehaviour:
   - {fileID: 1630582449}
   - {fileID: 1416015039}
   - {fileID: 328814349}
+  - {fileID: 328814349}
   filename: 
-  moveSpeed: 3
+  moveSpeed: 5
   player: {fileID: 1186536317}
   musicSource: {fileID: 0}
   beat: 1.1428572
@@ -3747,6 +3748,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5646533666606083332, guid: f82e2b9768f507445aee8518dfa0451b,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5646533666606083332, guid: f82e2b9768f507445aee8518dfa0451b,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6680326588925592226, guid: f82e2b9768f507445aee8518dfa0451b,
         type: 3}
       propertyPath: m_Name
@@ -4201,6 +4212,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Katana_Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 1167269357341787210, guid: df4aaac80285171449b9b6f1015e647e,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1167269357341787210, guid: df4aaac80285171449b9b6f1015e647e,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1512217268357254774, guid: df4aaac80285171449b9b6f1015e647e,
         type: 3}

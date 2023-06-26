@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Globalization;
+using Unity.VisualScripting;
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
@@ -73,6 +74,40 @@ public class Synch : MonoBehaviour
                             Vector3 position = new Vector3(x, y, z);
                             // Richiama il metodo per istanziare il cubo
                             SpawnSphere(sphereindex, position);
+                        }
+                        else
+                        {
+                            // In caso di formattazione delle coordinate non corretta
+                            Debug.Log("Cordinates Error");
+                        }
+                    }
+                    else if (data.Length == 4)
+                    {
+                        int sphereindex1 = int.Parse(data[0]);
+                        int sphereindex2 = int.Parse(data[2]);
+                        
+                        // Rimuovi parentesi quadre e separa le coordinate
+                        string[] coordinates1 = data[1].Trim('[', ']').Split(',');
+                        string[] coordinates2 = data[3].Trim('[', ']').Split(',');
+
+                        if (coordinates1.Length == 3 && coordinates2.Length == 3)
+                        {
+                            // Ottieni x,y,z dalla lista cordinates
+                            float x1 = float.Parse(coordinates1[0], CultureInfo.InvariantCulture);
+                            float y1 = float.Parse(coordinates1[1], CultureInfo.InvariantCulture);
+                            float z1 = float.Parse(coordinates1[2], CultureInfo.InvariantCulture);
+                            
+                            float x2 = float.Parse(coordinates2[0], CultureInfo.InvariantCulture);
+                            float y2 = float.Parse(coordinates2[1], CultureInfo.InvariantCulture);
+                            float z2 = float.Parse(coordinates2[2], CultureInfo.InvariantCulture);
+                            
+                            // Calcolo della posizione
+                            Vector3 position1 = new Vector3(x1, y1, z1);
+                            Vector3 position2 = new Vector3(x2, y2, z2);
+                            
+                            // Richiama il metodo per istanziare il cubo
+                            SpawnSphere(sphereindex1, position1);
+                            SpawnSphere(sphereindex2, position2);
                         }
                         else
                         {
