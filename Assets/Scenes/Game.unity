@@ -395,7 +395,10 @@ MonoBehaviour:
   moveSpeed: 5
   player: {fileID: 1186536317}
   musicSource: {fileID: 0}
-  beat: 1.1428572
+  midiname: 
+  noteRestriction: 0
+  timeStamps: []
+  beats: []
 --- !u!1 &234772378
 GameObject:
   m_ObjectHideFlags: 0

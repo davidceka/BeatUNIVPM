@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Globalization;
-using Unity.VisualScripting;
+using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
+using Note = Melanchall.DryWetMidi.Interaction.Note;
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
@@ -26,8 +28,17 @@ public class Synch : MonoBehaviour
 
     public AudioSource musicSource; // Componente AudioSource per la musica
     private Coroutine _spawnCoroutine; // Riferimento alla coroutine di spawn delle sfere
-    public float beat = (60f / 105f) * 2f;
+    //private float _beat = (60f / 105f) * 2f;
     
+    public MidiFile midiFile;
+    public string midiname;
+    private string _midiPath;
+    public Melanchall.DryWetMidi.MusicTheory.NoteName noteRestriction;
+    List<Note> notes = new List<Note>();
+    private Melanchall.DryWetMidi.Interaction.Note[] array;
+    public List<double> timeStamps = new List<double>();
+    public List<double> beats = new List<double>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,10 +49,57 @@ public class Synch : MonoBehaviour
         
         filename = "trace_test.txt";
         _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
+        midiname = "test_midi.mid";
+        _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file mid
+        midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
+        noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C;
+        GetNotesFromMidiFile();
+        GetBeats(array);
 
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi:
         powerUp = FindObjectOfType<PowerUp>();
         scoreManager = FindObjectOfType<ScoreManager>();
+    }
+    
+    private void GetNotesFromMidiFile()
+    {
+        notes = new List<Note>();
+        IEnumerable<Note> notesCollection = midiFile.GetNotes();
+
+        foreach (Note note in notesCollection)
+        {
+            notes.Add(note);
+        }
+        Note[] notesArray = notes.ToArray();
+        array = new Melanchall.DryWetMidi.Interaction.Note[notesArray.Length];
+        for (int i = 0; i < notesArray.Length; i++)
+        {
+            array[i] = notesArray[i];
+        }
+    }
+    
+    private void GetBeats(Melanchall.DryWetMidi.Interaction.Note[] array)
+    {
+        foreach (var note in array)
+        {
+            //if (note.NoteName == noteRestriction)
+            var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midiFile.GetTempoMap());
+            timeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+        }
+
+        double previousTimestamp = timeStamps[0];
+        beats.Add(previousTimestamp);
+        
+        for (int i = 1; i < timeStamps.Count; i++)
+        {
+            double currentTimestamp = timeStamps[i];
+            double timeDifference = currentTimestamp - previousTimestamp;
+            beats.Add(timeDifference);
+
+            // Esegui qui le azioni desiderate quando si raggiunge il timestamp corrente
+
+            previousTimestamp = currentTimestamp;
+        }
     }
 
     // Coroutine per la lettura del file txt e l'avvio del pattern descritto
@@ -49,82 +107,87 @@ public class Synch : MonoBehaviour
     {
         while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
         {
-            if (File.Exists(_filepath))
+            foreach (var beat in beats)
             {
-                string[] lines = File.ReadAllLines(_filepath);
-
-                foreach (string line in lines)
+                if (File.Exists(_filepath))
                 {
-                    string[] data = line.Split(' '); // Dividi la riga per ottenere l'indice del cubo e le coordinate di spawn
+                    string[] lines = File.ReadAllLines(_filepath);
 
-                    if (data.Length == 2)
+                    foreach (string line in lines)
                     {
-                        int sphereindex = int.Parse(data[0]);
-                        
-                        // Rimuovi parentesi quadre e separa le coordinate
-                        string[] coordinates = data[1].Trim('[', ']').Split(',');
+                        string[] data = line.Split(' '); // Dividi la riga per ottenere l'indice del cubo e le coordinate di spawn
 
-                        if (coordinates.Length == 3)
+                        if (data.Length == 2)
                         {
-                            // Ottieni x,y,z dalla lista cordinates
-                            float x = float.Parse(coordinates[0], CultureInfo.InvariantCulture);
-                            float y = float.Parse(coordinates[1], CultureInfo.InvariantCulture);
-                            float z = float.Parse(coordinates[2], CultureInfo.InvariantCulture);
-                            // Calcolo della posizione
-                            Vector3 position = new Vector3(x, y, z);
-                            // Richiama il metodo per istanziare il cubo
-                            SpawnSphere(sphereindex, position);
-                        }
-                        else
-                        {
-                            // In caso di formattazione delle coordinate non corretta
-                            Debug.Log("Cordinates Error");
-                        }
-                    }
-                    else if (data.Length == 4)
-                    {
-                        int sphereindex1 = int.Parse(data[0]);
-                        int sphereindex2 = int.Parse(data[2]);
+                            int sphereindex = int.Parse(data[0]);
                         
-                        // Rimuovi parentesi quadre e separa le coordinate
-                        string[] coordinates1 = data[1].Trim('[', ']').Split(',');
-                        string[] coordinates2 = data[3].Trim('[', ']').Split(',');
+                            // Rimuovi parentesi quadre e separa le coordinate
+                            string[] coordinates = data[1].Trim('[', ']').Split(',');
 
-                        if (coordinates1.Length == 3 && coordinates2.Length == 3)
-                        {
-                            // Ottieni x,y,z dalla lista cordinates
-                            float x1 = float.Parse(coordinates1[0], CultureInfo.InvariantCulture);
-                            float y1 = float.Parse(coordinates1[1], CultureInfo.InvariantCulture);
-                            float z1 = float.Parse(coordinates1[2], CultureInfo.InvariantCulture);
-                            
-                            float x2 = float.Parse(coordinates2[0], CultureInfo.InvariantCulture);
-                            float y2 = float.Parse(coordinates2[1], CultureInfo.InvariantCulture);
-                            float z2 = float.Parse(coordinates2[2], CultureInfo.InvariantCulture);
-                            
-                            // Calcolo della posizione
-                            Vector3 position1 = new Vector3(x1, y1, z1);
-                            Vector3 position2 = new Vector3(x2, y2, z2);
-                            
-                            // Richiama il metodo per istanziare il cubo
-                            SpawnSphere(sphereindex1, position1);
-                            SpawnSphere(sphereindex2, position2);
+                            if (coordinates.Length == 3)
+                            {
+                                // Ottieni x,y,z dalla lista cordinates
+                                float x = float.Parse(coordinates[0], CultureInfo.InvariantCulture);
+                                float y = float.Parse(coordinates[1], CultureInfo.InvariantCulture);
+                                float z = float.Parse(coordinates[2], CultureInfo.InvariantCulture);
+                                // Calcolo della posizione
+                                Vector3 position = new Vector3(x, y, z);
+                                // Richiama il metodo per istanziare il cubo
+                                SpawnSphere(sphereindex, position);
+                            }
+                            else
+                            {
+                                // In caso di formattazione delle coordinate non corretta
+                                Debug.Log("Cordinates Error");
+                            }
                         }
-                        else
+                        else if (data.Length == 4)
                         {
-                            // In caso di formattazione delle coordinate non corretta
-                            Debug.Log("Cordinates Error");
+                            int sphereindex1 = int.Parse(data[0]);
+                            int sphereindex2 = int.Parse(data[2]);
+                        
+                            // Rimuovi parentesi quadre e separa le coordinate
+                            string[] coordinates1 = data[1].Trim('[', ']').Split(',');
+                            string[] coordinates2 = data[3].Trim('[', ']').Split(',');
+
+                            if (coordinates1.Length == 3 && coordinates2.Length == 3)
+                            {
+                                // Ottieni x,y,z dalla lista cordinates
+                                float x1 = float.Parse(coordinates1[0], CultureInfo.InvariantCulture);
+                                float y1 = float.Parse(coordinates1[1], CultureInfo.InvariantCulture);
+                                float z1 = float.Parse(coordinates1[2], CultureInfo.InvariantCulture);
+                            
+                                float x2 = float.Parse(coordinates2[0], CultureInfo.InvariantCulture);
+                                float y2 = float.Parse(coordinates2[1], CultureInfo.InvariantCulture);
+                                float z2 = float.Parse(coordinates2[2], CultureInfo.InvariantCulture);
+                            
+                                // Calcolo della posizione
+                                Vector3 position1 = new Vector3(x1, y1, z1);
+                                Vector3 position2 = new Vector3(x2, y2, z2);
+                            
+                                // Richiama il metodo per istanziare il cubo
+                                SpawnSphere(sphereindex1, position1);
+                                SpawnSphere(sphereindex2, position2);
+                            }
+                            else
+                            {
+                                // In caso di formattazione delle coordinate non corretta
+                                Debug.Log("Cordinates Error");
+                            }
                         }
+                        
+                        // Espressione che viene utilizzata all'interno di un metodo coroutine
+                        // in Unity per creare un ritardo di tempo specifico (in questo caso, il beat)
+                        //yield return new WaitForSeconds(_beat);
+                        
+                        yield return new WaitForSeconds((float)beat);
                     }
-                
-                    // Espressione che viene utilizzata all'interno di un metodo coroutine
-                    // in Unity per creare un ritardo di tempo specifico (in questo caso, il beat)
-                    yield return new WaitForSeconds(beat);
                 }
-            }
-            else
-            {
-                // Qualora il percorso del file indicato fosse errato
-                Debug.Log("File not found: " + _filepath);
+                else
+                {
+                    // Qualora il percorso del file indicato fosse errato
+                    Debug.Log("File not found: " + _filepath);
+                }
             }
         }
     }
@@ -173,7 +236,7 @@ public class Synch : MonoBehaviour
     void Update()
     {
         MoveSpheres();
-        
+
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi
         if (musicSource.isPlaying && _spawnCoroutine == null)
         {
