@@ -26,7 +26,9 @@ public class Hit : MonoBehaviour
     private ParticleSystem _particles;
     
     // Componente AudioSource per il suono di collisione
-    public AudioSource soundSource; 
+    public AudioSource soundSource;
+    
+    public float time = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +44,7 @@ public class Hit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time = Time.deltaTime;
         // Rileva la pressione del tasto
         if (Input.GetKeyDown(button) && !_isButtonPressed)
         {
@@ -81,8 +84,13 @@ public class Hit : MonoBehaviour
         // Controlla se la collisione è avvenuta con un cubo
         if (collision.gameObject.CompareTag("Respawn"))
         {
+            if (!spawn.musicPlaying)
+            {
+                spawn.musicSource.Play();
+                spawn.musicPlaying = true;
+            }
             soundSource.Play(); // Attiva l'effetto sonoro
-            
+
             // Ottieni il cubo colpito, il suo colore e quello dell'arma che la colpisce
             GameObject sphere = collision.gameObject;
             Color sphereColor = sphere.GetComponent<Renderer>().material.color;

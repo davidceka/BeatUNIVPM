@@ -278,8 +278,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b50becd9adcc75d408f56a3bd62efdec, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 367cb9cf2161d114eb88badc8e8cff8d, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -392,9 +392,11 @@ MonoBehaviour:
   - {fileID: 328814349}
   - {fileID: 328814349}
   filename: 
-  moveSpeed: 5
+  moveSpeed: 4.3
   player: {fileID: 1186536317}
   musicSource: {fileID: 0}
+  musicPlaying: 0
+  startCoroutine: 0
   midiname: 
   noteRestriction: 0
   timeStamps: []
