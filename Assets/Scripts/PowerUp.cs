@@ -131,7 +131,7 @@ public class PowerUp : MonoBehaviour
         {
             _fill.color = Color.red;
         }
-        else if (slider.value > 10.3f && slider.value <= 25f)
+        else if (slider.value > 10.3f && slider.value <= slider.maxValue-1)
         {
             _fill.color = Color.yellow;
         }
