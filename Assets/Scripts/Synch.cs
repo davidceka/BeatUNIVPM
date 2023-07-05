@@ -280,6 +280,12 @@ public class Synch : MonoBehaviour
             float spherePosZ = sphere.transform.position.z;
             float distance = Mathf.Abs(spherePosZ - _playerPosZ);
             
+            if (!musicPlaying && spherePosZ <= 1.95f)
+            {
+                musicSource.Play();
+                musicPlaying = true;
+            }
+            
             // Verifica se il cubo ha raggiunto il giocatore
             if (distance < 0.1f)
             {

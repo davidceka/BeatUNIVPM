@@ -84,11 +84,6 @@ public class Hit : MonoBehaviour
         // Controlla se la collisione è avvenuta con un cubo
         if (collision.gameObject.CompareTag("Respawn"))
         {
-            if (!spawn.musicPlaying)
-            {
-                spawn.musicSource.Play();
-                spawn.musicPlaying = true;
-            }
             soundSource.Play(); // Attiva l'effetto sonoro
 
             // Ottieni il cubo colpito, il suo colore e quello dell'arma che la colpisce

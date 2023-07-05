@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Slider = UnityEngine.UI.Slider;
 using UnityEngine.SceneManagement;
+using Image = UnityEngine.UI.Image;
 
 // CLASSE PER LA GESTIONE DEI POWER UP
 public class PowerUp : MonoBehaviour
@@ -18,6 +20,16 @@ public class PowerUp : MonoBehaviour
     public bool isGameOver = false; // Variabile booleana per identificare il Game Over
     public float time = 0f; // Variabile per il conteggio del tempo
 
+    private Image _fill;
+    /*
+    public string hexOrange = "E26D39"; // Valore esadecimale del colore arancione
+    public string hexYellow = "F6E415"; // Valore esadecimale del colore giallo
+    public string hexGreen = "39E350"; // Valore esadecimale del colore verde
+    public Color orange;
+    public Color yellow;
+    public Color green;
+    */
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +37,6 @@ public class PowerUp : MonoBehaviour
         spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
         
         // setta i valori di min e max degli slider
-        
         slider.minValue = 0.3f;
         slider.maxValue = 30f;
 
@@ -33,6 +44,14 @@ public class PowerUp : MonoBehaviour
         health.maxValue = 50f;
         
         SetBar(0.3f, 50f);
+
+        // Settaggio per i riferimenti al colore della barra PowerUp
+        _fill = GameObject.FindWithTag("FillPU").GetComponent<Image>();
+        /*
+        ColorUtility.TryParseHtmlString("#" + hexOrange, out orange);
+        ColorUtility.TryParseHtmlString("#" + hexYellow, out yellow);
+        ColorUtility.TryParseHtmlString("#" + hexGreen, out green);
+        */
     }
 
     // Update is called once per frame
@@ -46,6 +65,8 @@ public class PowerUp : MonoBehaviour
         {
             GameOver();
         }
+        
+        CheckColor();
     }
 
     // Metodo per il setting dello slider ad un valore specifico
@@ -102,6 +123,22 @@ public class PowerUp : MonoBehaviour
         spawn.musicSource.Stop(); // Blocca la musica
         isGameOver = true;
         SceneManager.LoadScene("LoseScreen");
+    }
+
+    public void CheckColor()
+    {
+        if (slider.value >= slider.minValue && slider.value <= 10.3f)
+        {
+            _fill.color = Color.red;
+        }
+        else if (slider.value > 10.3f && slider.value <= 25f)
+        {
+            _fill.color = Color.yellow;
+        }
+        else
+        {
+            _fill.color = Color.green;
+        }
     }
 
     /// <summary>
