@@ -33,6 +33,7 @@ public class Synch : MonoBehaviour
     public bool startCoroutine = false;
     //private float _beat = (60f / 105f) * 2f;
     
+    // Gruppo di variabile utilizzate per la gestione del ritmo di spawn
     public MidiFile midiFile;
     public string midiname;
     private string _midiPath;
@@ -53,9 +54,9 @@ public class Synch : MonoBehaviour
         filename = "trace_test.txt";
         _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
         midiname = "heat_ok.mid";
-        _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file mid
+        _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
         midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
-        noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C;
+        // noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C; => può essere utilizzato per selezionare solo le note desiderate
         GetNotesFromMidiFile();
         GetBeats(array);
 
@@ -66,6 +67,7 @@ public class Synch : MonoBehaviour
         scoreManager = FindObjectOfType<ScoreManager>();
     }
     
+    // Metodo per prendere le note dal file midi (richiamato nello start)
     private void GetNotesFromMidiFile()
     {
         notes = new List<Note>();
@@ -75,9 +77,15 @@ public class Synch : MonoBehaviour
         {
             notes.Add(note);
         }
+        
         Note[] notesArray = notes.ToArray();
+        
+        // Le note vengono copiate all'interno di un array, oggetto della libreria Melanchall.
+        // Da questo array si può ricavare il TempoMap della canzone (nel metodo GetBeats()). 
         array = new Melanchall.DryWetMidi.Interaction.Note[notesArray.Length];
-        Debug.Log(array.Length);
+        
+        Debug.Log(array.Length); // Da togliere a fine progetto
+        
         for (int i = 0; i < notesArray.Length; i++)
         {
             array[i] = notesArray[i];
@@ -88,8 +96,12 @@ public class Synch : MonoBehaviour
     {
         foreach (var note in array)
         {
-            //if (note.NoteName == noteRestriction)
+            //if (note.NoteName == noteRestriction) => per applicare la restrizione ad un sottoinsieme di note
+            
+            // Se non avessimo copiato le note nell'array, oggetto della libreria Melanchall,
+            // Il metodo TimeConverter avrebbe generato un errore.
             var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midiFile.GetTempoMap());
+            // Aggiunge il timestamp di ogni nota alla lista timeStamps
             timeStamps.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
         }
 
@@ -100,27 +112,27 @@ public class Synch : MonoBehaviour
         {
             double currentTimestamp = timeStamps[i];
             double timeDifference = currentTimestamp - previousTimestamp;
+            // Lista in cui vengono salvati i tempi di spawn
             beats.Add(timeDifference);
 
             // Esegui qui le azioni desiderate quando si raggiunge il timestamp corrente
 
             previousTimestamp = currentTimestamp;
         }
-        Debug.Log(beats.Count);
+        Debug.Log(beats.Count); // Da togliere a fine progetto
     }
 
     // Coroutine per la lettura del file txt e l'avvio del pattern descritto
     private IEnumerator SpawnSphereCoroutine()
     {
-        while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
-        {
-            string[] lines = File.ReadAllLines(_filepath);
+        //while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
+        string[] lines = File.ReadAllLines(_filepath);
             
             foreach (var pair in beats.Zip(lines, (beat, line) => new { Beat = beat, Line = line }))
             {
                 var beat = pair.Beat;
                 var line = pair.Line;
-                
+
                 string[] data = line.Split(' '); // Dividi la riga per ottenere l'indice del cubo e le coordinate di spawn
 
                     if (data.Length == 2)
@@ -196,7 +208,6 @@ public class Synch : MonoBehaviour
             }
             
             StopCoroutine(_spawnCoroutine);
-        }
     }
 
     // Metodo per l'instanziazione di un cubo
@@ -273,6 +284,13 @@ public class Synch : MonoBehaviour
             // Prendo il cubo i e lo sposto verso il giocatore
             // ( NOTA: Il giocatore si trova dietro rispetto allo spawner )
             GameObject sphere = spawnedSpheres[i];
+            
+            if (powerUp.activeSecond)
+            {
+                sphere.GetComponent<Renderer>().material.color = Color.white;
+                sphere.GetComponent<Light>().color = Color.white;
+            }
+            
             sphere.transform.Translate(Vector3.back * distanceToMove);
 
             // Calcolo ad ogni frame la posizione dei cubi lungo l'asse Z

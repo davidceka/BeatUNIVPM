@@ -17,18 +17,11 @@ public class PowerUp : MonoBehaviour
     public Slider health; // Slider per vita
     
     public bool active = false; // Variabile booleana per verificare se il power up è attivo
+    public bool activeSecond = false;
     public bool isGameOver = false; // Variabile booleana per identificare il Game Over
     public float time = 0f; // Variabile per il conteggio del tempo
 
     private Image _fill;
-    /*
-    public string hexOrange = "E26D39"; // Valore esadecimale del colore arancione
-    public string hexYellow = "F6E415"; // Valore esadecimale del colore giallo
-    public string hexGreen = "39E350"; // Valore esadecimale del colore verde
-    public Color orange;
-    public Color yellow;
-    public Color green;
-    */
 
     // Start is called before the first frame update
     void Start()
@@ -47,11 +40,6 @@ public class PowerUp : MonoBehaviour
 
         // Settaggio per i riferimenti al colore della barra PowerUp
         _fill = GameObject.FindWithTag("FillPU").GetComponent<Image>();
-        /*
-        ColorUtility.TryParseHtmlString("#" + hexOrange, out orange);
-        ColorUtility.TryParseHtmlString("#" + hexYellow, out yellow);
-        ColorUtility.TryParseHtmlString("#" + hexGreen, out green);
-        */
     }
 
     // Update is called once per frame
@@ -125,6 +113,7 @@ public class PowerUp : MonoBehaviour
         SceneManager.LoadScene("LoseScreen");
     }
 
+    // Metodo che controlla lo stato della barra PowerUp e ne modifica il colore di conseguenza
     public void CheckColor()
     {
         if (slider.value >= slider.minValue && slider.value <= 10.3f)
@@ -143,7 +132,8 @@ public class PowerUp : MonoBehaviour
 
     /// <summary>
     /// Questo è un metodo in più che non so se potrebbe servire
-    /// (forse per riavviare dopo il game over o dopo aver implementato un sistema di pausa)
+    /// (forse per riavviare il gioco dopo il game over o dopo
+    /// aver implementato un sistema di pausa)
     /// </summary>
     public void Restart()
     {

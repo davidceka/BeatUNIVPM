@@ -1719,6 +1719,7 @@ MonoBehaviour:
   slider: {fileID: 613965601}
   health: {fileID: 1366060780}
   active: 0
+  activeSecond: 0
   isGameOver: 0
   time: 0
 --- !u!1 &685528486
@@ -3281,6 +3282,7 @@ MonoBehaviour:
   slider: {fileID: 613965601}
   health: {fileID: 1366060780}
   active: 0
+  activeSecond: 0
   isGameOver: 0
   time: 0
 --- !u!114 &1366060780
@@ -3768,6 +3770,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Katana_Left
       objectReference: {fileID: 0}
+    - target: {fileID: 6680326588925592226, guid: f82e2b9768f507445aee8518dfa0451b,
+        type: 3}
+      propertyPath: m_TagString
+      value: SwordLeft
+      objectReference: {fileID: 0}
     - target: {fileID: 8909622528173689143, guid: f82e2b9768f507445aee8518dfa0451b,
         type: 3}
       propertyPath: m_RootOrder
@@ -4217,6 +4224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Katana_Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 587745852677205840, guid: df4aaac80285171449b9b6f1015e647e,
+        type: 3}
+      propertyPath: m_TagString
+      value: SwordRight
       objectReference: {fileID: 0}
     - target: {fileID: 1167269357341787210, guid: df4aaac80285171449b9b6f1015e647e,
         type: 3}

@@ -9,6 +9,10 @@ TagManager:
   - Bomba
   - Combo
   - FillPU
+  - SwordLeft
+  - SwordRight
+  - CCube
+  - PCube
   layers:
   - Default
   - TransparentFX

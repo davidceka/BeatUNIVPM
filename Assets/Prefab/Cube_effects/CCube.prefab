@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6874057462722541866}
   m_Layer: 0
   m_Name: CCube
-  m_TagString: Respawn
+  m_TagString: CCube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

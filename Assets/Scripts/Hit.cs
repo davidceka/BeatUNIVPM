@@ -19,7 +19,9 @@ public class Hit : MonoBehaviour
 
     // Secondo Gruppo
     public KeyCode button = KeyCode.Space;
+    public KeyCode buttonA = KeyCode.A;
     private bool _isButtonPressed = false; // Per capire se il tasto è premuto
+    private bool _isButtonPressedA = false;
     
     // Terzo gruppo
     public GameObject particleObj;
@@ -28,7 +30,11 @@ public class Hit : MonoBehaviour
     // Componente AudioSource per il suono di collisione
     public AudioSource soundSource;
     
-    public float time = 0f;
+    // Variabili per il riferimento ai gameobject dei cubi e delle spade
+    private Renderer _swordRight;
+    private Renderer _swordLeft;
+    private Color _colorRight;
+    private Color _colorLeft;
 
     // Start is called before the first frame update
     void Start()
@@ -39,22 +45,38 @@ public class Hit : MonoBehaviour
         powerUp = FindObjectOfType<PowerUp>();
         
         soundSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
+
+        _swordRight = GameObject.FindGameObjectWithTag("SwordRight").GetComponent<Renderer>();
+        _swordLeft = GameObject.FindGameObjectWithTag("SwordLeft").GetComponent<Renderer>();
+        _colorRight = _swordRight.material.color;
+        _colorLeft = _swordLeft.material.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-        time = Time.deltaTime;
-        // Rileva la pressione del tasto
+        // Rileva la pressione del tasto Spazio
         if (Input.GetKeyDown(button) && !_isButtonPressed)
         {
             _isButtonPressed = true;
         }
 
-        // Rileva il rilascio del tasto
+        // Rileva il rilascio del tasto Spazio
         if (Input.GetKeyUp(button) && _isButtonPressed)
         {
             _isButtonPressed = false;
+        }
+        
+        // Rileva la pressione del tasto A
+        if (Input.GetKeyDown(buttonA) && !_isButtonPressedA)
+        {
+            _isButtonPressedA = true;
+        }
+
+        // Rileva il rilascio del tasto A
+        if (Input.GetKeyUp(buttonA) && _isButtonPressedA)
+        {
+            _isButtonPressedA = false;
         }
         
         // Rileva se le condizioni sono soddisfatte e attiva il power up
@@ -62,6 +84,14 @@ public class Hit : MonoBehaviour
         {
             scoreManager.reward = 20;
             powerUp.active = true;
+        }
+        
+        // Rileva se le condizioni sono soddisfatte e attiva il power up
+        if (_isButtonPressedA && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
+        {
+            _swordLeft.material.color = Color.white;
+            _swordRight.material.color = Color.white;
+            powerUp.activeSecond = true;
         }
         
         // Gestisce il power up con l'attivazione di un timer
@@ -76,13 +106,42 @@ public class Hit : MonoBehaviour
                 scoreManager.reward = 10;
             }
         }
+        
+        // Gestisce il power up con l'attivazione di un timer
+        if (powerUp.activeSecond)
+        {
+            powerUp.TimerPowerUp(); // Decrementa progressivamente la barra dei power up
+            
+            // Al termine del timer, le variabili vengono reimpostate (power up disattivato)
+            if (powerUp.slider.value <= 0.3f)
+            {
+                powerUp.activeSecond = false;
+
+                for (int i = 0; i < spawn.spawnedSpheres.Count; i++)
+                {
+                    GameObject cube = spawn.spawnedSpheres[i];
+
+                    if (cube.CompareTag("CCube"))
+                    {
+                        cube.GetComponent<Renderer>().material.color = _colorRight;
+                    }
+                    else if (cube.CompareTag("PCube"))
+                    {
+                        cube.GetComponent<Renderer>().material.color = _colorLeft;
+                    }
+                    //cube.GetComponent<Renderer>().material.color = Color.white;
+                }
+                _swordLeft.material.color = _colorLeft;
+                _swordRight.material.color = _colorRight;
+            }
+        }
     }
     
     // Metodo per la gestione della collisione tra le armi e gli spawn
     private void OnCollisionEnter(Collision collision)
     {
         // Controlla se la collisione è avvenuta con un cubo
-        if (collision.gameObject.CompareTag("Respawn"))
+        if (collision.gameObject.CompareTag("CCube") || collision.gameObject.CompareTag("PCube"))
         {
             soundSource.Play(); // Attiva l'effetto sonoro
 
@@ -110,7 +169,7 @@ public class Hit : MonoBehaviour
                 scoreManager.count += 1; // Incrementa il contatore combo di una unità
                 
                 // Incremento la barra dei power up, se non attivo un power up
-                if (!powerUp.active)
+                if (!powerUp.active && !powerUp.activeSecond)
                 {
                     powerUp.IncreaseBar(scoreManager.reward);
                 }
