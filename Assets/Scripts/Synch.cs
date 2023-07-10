@@ -53,7 +53,7 @@ public class Synch : MonoBehaviour
         
         filename = "trace_test.txt";
         _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
-        midiname = "heat_ok.mid";
+        midiname = "hysteria.mid";
         _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
         midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
         // noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C; => può essere utilizzato per selezionare solo le note desiderate
