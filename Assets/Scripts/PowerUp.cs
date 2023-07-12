@@ -107,7 +107,7 @@ public class PowerUp : MonoBehaviour
     // Metodo che implementa il Game Over
     public void GameOver()
     {
-        Time.timeScale = 0; // Blocca il gioco
+        Time.timeScale = 1f; // Blocca il gioco
         spawn.musicSource.Stop(); // Blocca la musica
         isGameOver = true;
         SceneManager.LoadScene("LoseScreen");

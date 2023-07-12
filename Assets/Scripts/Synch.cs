@@ -7,6 +7,8 @@ using System.Linq;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Note = Melanchall.DryWetMidi.Interaction.Note;
+using UnityEngine.Networking;
+
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
@@ -28,6 +30,8 @@ public class Synch : MonoBehaviour
     private string _filepath; // Percorso del file da cui leggere il pattern
     public float moveSpeed; // Velocità di movimento dei cubi
 
+    string fileContent;
+
     public Transform player;
     private float _playerPosZ; // Posizione sull'asse z del giocatore
 
@@ -48,7 +52,7 @@ public class Synch : MonoBehaviour
     public List<double> beats = new List<double>();
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
         debugPanel = FindObjectOfType<DebugPanel>();
 
@@ -60,14 +64,54 @@ public class Synch : MonoBehaviour
         musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
         
         filename = "trace_test.txt";
-        _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
+        //_filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
 
-        debugPanel.UpdateDebugText("Valore di debug: " + _filepath.ToString());
+        //debugPanel.UpdateDebugText(Application.streamingAssetsPath);
+
+        _filepath = Path.Combine(Application.streamingAssetsPath, "trace_test.txt");
+        UnityWebRequest www = UnityWebRequest.Get(_filepath);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            fileContent = www.downloadHandler.text;
+            debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
+        }
+        else
+        {
+            debugPanel.UpdateDebugText("Errore nell'accesso al file: " + www.error);
+        }
 
 
-        midiname = "hysteria.mid";
-        _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
-        midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
+        _midiPath = Path.Combine(Application.streamingAssetsPath, "hysteria.mid");
+        www = UnityWebRequest.Get(_midiPath);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            byte[] fileContent = www.downloadHandler.data;
+            debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
+            using (var memoryStream = new MemoryStream(fileContent))
+            {
+                midiFile = MidiFile.Read(memoryStream);
+                // Esegui l'elaborazione delle note o qualsiasi altra logica desiderata
+                //debugPanel.UpdateDebugText(midiFile.GetType().ToString());
+
+            }
+        }
+        else
+        {
+            debugPanel.UpdateDebugText("Errore nell'accesso al file: " + www.error);
+        }
+
+        
+
+
+        //midiname = "hysteria.mid";
+        //_midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
+        //midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
         // noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C; => può essere utilizzato per selezionare solo le note desiderate
         GetNotesFromMidiFile();
         GetBeats(array);
@@ -138,9 +182,10 @@ public class Synch : MonoBehaviour
     private IEnumerator SpawnSphereCoroutine()
     {
         //while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
-        string[] lines = File.ReadAllLines(_filepath);
-            
-            foreach (var pair in beats.Zip(lines, (beat, line) => new { Beat = beat, Line = line }))
+        //string[] lines = File.ReadAllLines(_filepath);
+        string[] lines = fileContent.Split('\n');
+
+        foreach (var pair in beats.Zip(lines, (beat, line) => new { Beat = beat, Line = line }))
             {
                 var beat = pair.Beat;
                 var line = pair.Line;
