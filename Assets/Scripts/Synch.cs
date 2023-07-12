@@ -11,6 +11,10 @@ using Note = Melanchall.DryWetMidi.Interaction.Note;
 // CLASSE PER LA GESTIONE DELLO SPAWNER
 public class Synch : MonoBehaviour
 {
+    //debug panel
+    private DebugPanel debugPanel;
+
+
     // Gruppo di variabili per riferimenti alle altre classi
     public PowerUp powerUp;
     public ScoreManager scoreManager;
@@ -46,6 +50,10 @@ public class Synch : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        debugPanel = FindObjectOfType<DebugPanel>();
+
+
+
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
         _playerPosZ = player.position.z; // Calcola la posizione del giocatore sull'asse Z
         
@@ -53,6 +61,10 @@ public class Synch : MonoBehaviour
         
         filename = "trace_test.txt";
         _filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
+
+        debugPanel.UpdateDebugText("Valore di debug: " + _filepath.ToString());
+
+
         midiname = "hysteria.mid";
         _midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
         midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
