@@ -11,6 +11,11 @@ public class LoadMenu : MonoBehaviour
         SceneManager.LoadScene("Game");
         Time.timeScale = 1f;
     }
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1f;
+    }
     public void QuitGame()
     {
         Application.Quit();
