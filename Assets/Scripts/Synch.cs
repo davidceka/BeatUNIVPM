@@ -36,6 +36,8 @@ public class Synch : MonoBehaviour
     private float _playerPosZ; // Posizione sull'asse z del giocatore
 
     public AudioSource musicSource; // Componente AudioSource per la musica
+    private string _musicpath;
+    private string _musicname;
     public bool musicPlaying = false;
     private Coroutine _spawnCoroutine; // Riferimento alla coroutine di spawn delle sfere
     public bool startCoroutine = false;
@@ -56,17 +58,12 @@ public class Synch : MonoBehaviour
     {
         debugPanel = FindObjectOfType<DebugPanel>();
 
-
-
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
         _playerPosZ = player.position.z; // Calcola la posizione del giocatore sull'asse Z
         
         musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
         
         filename = "trace_test.txt";
-        //_filepath = Path.Combine(Application.dataPath, "Scripts", filename); // Ottiene il percorso per leggere il file del pattern
-
-        //debugPanel.UpdateDebugText(Application.streamingAssetsPath);
 
         _filepath = Path.Combine(Application.streamingAssetsPath, "trace_test.txt");
         UnityWebRequest www = UnityWebRequest.Get(_filepath);
@@ -105,17 +102,27 @@ public class Synch : MonoBehaviour
         {
             debugPanel.UpdateDebugText("Errore nell'accesso al file: " + www.error);
         }
-
-        
-
-
-        //midiname = "hysteria.mid";
-        //_midiPath = Path.Combine(Application.dataPath, "Sounds", midiname); // Ottiene il percorso per leggere il file midi
-        //midiFile = MidiFile.Read(_midiPath); // Leggo il file dal percorso
-        // noteRestriction = Melanchall.DryWetMidi.MusicTheory.NoteName.C; => può essere utilizzato per selezionare solo le note desiderate
         GetNotesFromMidiFile();
         GetBeats(array);
 
+        _musicname = "Muse_Hysteria.mp3";
+        _musicpath = Path.Combine(Application.streamingAssetsPath, _musicname);
+        www = UnityWebRequestMultimedia.GetAudioClip(_musicpath, AudioType.MPEG);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            AudioClip audioClip = DownloadHandlerAudioClip.GetContent(www);
+            musicSource.clip = audioClip;
+            musicSource.Play();
+            //debugPanel.UpdateDebugText("file musicale: " + _musicname);
+        }
+        else
+        {
+            debugPanel.UpdateDebugText("Errore nell'accesso al file: " + www.error);
+        }
+        
         _spawnCoroutine = StartCoroutine(SpawnSphereCoroutine());
 
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi:
@@ -139,9 +146,7 @@ public class Synch : MonoBehaviour
         // Le note vengono copiate all'interno di un array, oggetto della libreria Melanchall.
         // Da questo array si può ricavare il TempoMap della canzone (nel metodo GetBeats()). 
         array = new Melanchall.DryWetMidi.Interaction.Note[notesArray.Length];
-        
-        Debug.Log(array.Length); // Da togliere a fine progetto
-        
+
         for (int i = 0; i < notesArray.Length; i++)
         {
             array[i] = notesArray[i];
