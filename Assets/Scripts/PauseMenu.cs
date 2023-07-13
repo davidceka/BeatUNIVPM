@@ -15,6 +15,8 @@ public class PauseGame : MonoBehaviour
     private InputDevice device;
     private int cont = 0;
 
+    public Synch spawn;
+
 
     [SerializeField]
     private GameObject countdownPanel;
@@ -23,6 +25,7 @@ public class PauseGame : MonoBehaviour
 
     private void Start()
     {
+        spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
         debugPanel = FindObjectOfType<DebugPanel>();
         var inputDevices = new List<UnityEngine.XR.InputDevice>();
         UnityEngine.XR.InputDevices.GetDevices(inputDevices);
@@ -59,6 +62,7 @@ public class PauseGame : MonoBehaviour
             isPaused = !isPaused;
             if (isPaused)
             {
+                spawn.musicSource.Pause();
                 Time.timeScale = 0f;
                 // Mostra il pannello di pausa
                 pausePanel.SetActive(true);
@@ -71,7 +75,7 @@ public class PauseGame : MonoBehaviour
         isPaused = false;
         
         pausePanel.SetActive(false);
-
+        spawn.musicSource.UnPause();
         // Mostra il pannello di countdown
         //countdownPanel.SetActive(true);
         Time.timeScale = 1f;

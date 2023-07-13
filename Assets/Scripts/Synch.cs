@@ -81,7 +81,7 @@ public class Synch : MonoBehaviour
         }
 
 
-        _midiPath = Path.Combine(Application.streamingAssetsPath, "hysteria.mid");
+        _midiPath = Path.Combine(Application.streamingAssetsPath, "butter.mid");
         www = UnityWebRequest.Get(_midiPath);
 
         yield return www.SendWebRequest();
@@ -105,7 +105,7 @@ public class Synch : MonoBehaviour
         GetNotesFromMidiFile();
         GetBeats(array);
 
-        _musicname = "Muse_Hysteria.mp3";
+        _musicname = "butter.mp3";
         _musicpath = Path.Combine(Application.streamingAssetsPath, _musicname);
         www = UnityWebRequestMultimedia.GetAudioClip(_musicpath, AudioType.MPEG);
 
