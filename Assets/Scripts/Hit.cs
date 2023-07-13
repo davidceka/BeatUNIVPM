@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-
+using UnityEngine.XR;
 // CLASSE PER LA GESTIONE DEGLI INPUT E DELLA COLLISIONE
 public class Hit : MonoBehaviour
 {
@@ -11,11 +12,20 @@ public class Hit : MonoBehaviour
     /// Primo Gruppo => riferimenti alle altre classi
     /// Secondo gruppo => input
     /// </summary>
-    
+
+
+    private DebugPanel debugPanel;
+
+
     // Primo Gruppo
     public Synch spawn;
     public ScoreManager scoreManager;
     public PowerUp powerUp;
+
+    private List<InputDevice> foundControllers;
+    private bool isPrimaryButtonPressed = false;
+    private bool isSecondaryButtonPressed = false;
+    private InputDevice device;
 
     // Secondo Gruppo
     public KeyCode button = KeyCode.Space;
@@ -36,9 +46,13 @@ public class Hit : MonoBehaviour
     private Color _colorRight;
     private Color _colorLeft;
 
+
+    string debug;
+
     // Start is called before the first frame update
     void Start()
     {
+        debugPanel = FindObjectOfType<DebugPanel>();
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi
         spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
         scoreManager = FindObjectOfType<ScoreManager>();
@@ -50,38 +64,62 @@ public class Hit : MonoBehaviour
         _swordLeft = GameObject.FindGameObjectWithTag("SwordLeft").GetComponent<Renderer>();
         _colorRight = _swordRight.material.color;
         _colorLeft = _swordLeft.material.color;
+
+
+        InputDeviceCharacteristics rightTrackedControllerFilter = InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.TrackedDevice | InputDeviceCharacteristics.Right, rightHandedControllers;
+
+        foundControllers = new List<InputDevice>();
+        InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
+        device = foundControllers[0];
+        debugPanel.UpdateDebugText(device.characteristics.ToString());
+
+
+        
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        //debugPanel.UpdateDebugText("isbuttonpressed:"+_isButtonPressed.ToString()+"\n isbuttonpressedA:"+_isButtonPressedA.ToString());
         // Rileva la pressione del tasto Spazio
-        if (Input.GetKeyDown(button) && !_isButtonPressed)
+        if (device.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed &&!isSecondaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
             _isButtonPressed = true;
+            //debugPanel.UpdateDebugText(_isButtonPressed.ToString()+"   primary button pressed");
+            scoreManager.reward = 1000;
+            powerUp.active = true;
+
         }
 
         // Rileva il rilascio del tasto Spazio
-        if (Input.GetKeyUp(button) && _isButtonPressed)
+        if (device.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed)
         {
             _isButtonPressed = false;
         }
-        
+
         // Rileva la pressione del tasto A
-        if (Input.GetKeyDown(buttonA) && !_isButtonPressedA)
+        if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed &&!isPrimaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
+            
             _isButtonPressedA = true;
+            //debugPanel.UpdateDebugText(_isButtonPressedA.ToString() + "   secondary button pressed");
+            _swordLeft.material.color = Color.white;
+            _swordRight.material.color = Color.white;
+            powerUp.activeSecond = true;
         }
 
         // Rileva il rilascio del tasto A
-        if (Input.GetKeyUp(buttonA) && _isButtonPressedA)
+        // Rileva la pressione del tasto A
+        if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed)
         {
             _isButtonPressedA = false;
         }
-        
+
         // Rileva se le condizioni sono soddisfatte e attiva il power up
         if (_isButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
+            debugPanel.UpdateDebugText("qui dentro ci entra");
             scoreManager.reward = 20;
             powerUp.active = true;
         }
@@ -89,6 +127,7 @@ public class Hit : MonoBehaviour
         // Rileva se le condizioni sono soddisfatte e attiva il power up
         if (_isButtonPressedA && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
+            debugPanel.UpdateDebugText("qui pure");
             _swordLeft.material.color = Color.white;
             _swordRight.material.color = Color.white;
             powerUp.activeSecond = true;

@@ -76,7 +76,7 @@ public class Synch : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             fileContent = www.downloadHandler.text;
-            debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
+            //debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
         }
         else
         {
@@ -92,7 +92,7 @@ public class Synch : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             byte[] fileContent = www.downloadHandler.data;
-            debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
+            //debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
             using (var memoryStream = new MemoryStream(fileContent))
             {
                 midiFile = MidiFile.Read(memoryStream);
