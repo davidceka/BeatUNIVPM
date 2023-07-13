@@ -73,7 +73,7 @@ public class PauseGame : MonoBehaviour
         pausePanel.SetActive(false);
 
         // Mostra il pannello di countdown
-        countdownPanel.SetActive(true);
+        //countdownPanel.SetActive(true);
         Time.timeScale = 1f;
         //CountdownCoroutine();
     }
