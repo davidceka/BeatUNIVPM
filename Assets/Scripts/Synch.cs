@@ -65,7 +65,7 @@ public class Synch : MonoBehaviour
         
         filename = "trace_test.txt";
 
-        _filepath = Path.Combine(Application.streamingAssetsPath, "trace_test.txt");
+        _filepath = Path.Combine(Application.streamingAssetsPath, "Prova.txt");
         UnityWebRequest www = UnityWebRequest.Get(_filepath);
 
         yield return www.SendWebRequest();
@@ -81,7 +81,7 @@ public class Synch : MonoBehaviour
         }
 
 
-        _midiPath = Path.Combine(Application.streamingAssetsPath, "butter.mid");
+        _midiPath = Path.Combine(Application.streamingAssetsPath, "Uprising_ok.mid");
         www = UnityWebRequest.Get(_midiPath);
 
         yield return www.SendWebRequest();
@@ -105,7 +105,7 @@ public class Synch : MonoBehaviour
         GetNotesFromMidiFile();
         GetBeats(array);
 
-        _musicname = "butter.mp3";
+        _musicname = "muse_uprising.mp3";
         _musicpath = Path.Combine(Application.streamingAssetsPath, _musicname);
         www = UnityWebRequestMultimedia.GetAudioClip(_musicpath, AudioType.MPEG);
 
@@ -167,8 +167,8 @@ public class Synch : MonoBehaviour
         }
 
         double previousTimestamp = timeStamps[0];
-        beats.Add(previousTimestamp);
-        
+        //beats.Add(previousTimestamp);
+
         for (int i = 1; i < timeStamps.Count; i++)
         {
             double currentTimestamp = timeStamps[i];
@@ -359,13 +359,7 @@ public class Synch : MonoBehaviour
             // E la distanza rispetto alla posizione lungo l'asse Z del giocatore
             float spherePosZ = sphere.transform.position.z;
             float distance = Mathf.Abs(spherePosZ - _playerPosZ);
-            
-            if (!musicPlaying && spherePosZ <= 1.95f)
-            {
-                musicSource.Play();
-                musicPlaying = true;
-            }
-            
+
             // Verifica se il cubo ha raggiunto il giocatore
             if (distance < 0.1f)
             {
