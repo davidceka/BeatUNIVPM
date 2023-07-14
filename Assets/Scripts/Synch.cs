@@ -53,9 +53,13 @@ public class Synch : MonoBehaviour
     public List<double> timeStamps = new List<double>();
     public List<double> beats = new List<double>();
 
+    private float _time;
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        _time = Time.deltaTime;
+        
         debugPanel = FindObjectOfType<DebugPanel>();
 
         player = GameObject.FindGameObjectWithTag("Player").transform; // Trova il giocatore e ottiene il suo componente Transform
@@ -65,7 +69,7 @@ public class Synch : MonoBehaviour
         
         filename = "trace_test.txt";
 
-        _filepath = Path.Combine(Application.streamingAssetsPath, "Prova.txt");
+        _filepath = Path.Combine(Application.streamingAssetsPath, "uprising.txt");
         UnityWebRequest www = UnityWebRequest.Get(_filepath);
 
         yield return www.SendWebRequest();
@@ -186,6 +190,7 @@ public class Synch : MonoBehaviour
     // Coroutine per la lettura del file txt e l'avvio del pattern descritto
     private IEnumerator SpawnSphereCoroutine()
     {
+        int count = 0;
         //while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
         //string[] lines = File.ReadAllLines(_filepath);
         string[] lines = fileContent.Split('\n');
@@ -267,6 +272,8 @@ public class Synch : MonoBehaviour
                     //yield return new WaitForSeconds(_beat);
                         
                     yield return new WaitForSeconds((float)beat);
+                    count += 1;
+                    //debugPanel.UpdateDebugText(count.ToString());
             }
             
             StopCoroutine(_spawnCoroutine);
@@ -316,6 +323,12 @@ public class Synch : MonoBehaviour
     void Update()
     {
         MoveSpheres();
+        _time += 1;
+        if (!musicSource.isPlaying && _time > 5f)
+        {
+            debugPanel.UpdateDebugText("Fine musica");
+            Time.timeScale = 0f;
+        }
 
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi
         /*
