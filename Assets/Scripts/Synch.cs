@@ -55,9 +55,15 @@ public class Synch : MonoBehaviour
 
     private float _time;
 
+    [SerializeField]
+    private GameObject reviewPanel;
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
+
+
+        reviewPanel.SetActive(false);
         _time = Time.deltaTime;
         
         debugPanel = FindObjectOfType<DebugPanel>();
@@ -324,10 +330,11 @@ public class Synch : MonoBehaviour
     {
         MoveSpheres();
         _time += 1;
-        if (!musicSource.isPlaying && _time > 5f)
+        if (!musicSource.isPlaying && _time > 5f && Time.timeScale!=0f)
         {
             debugPanel.UpdateDebugText("Fine musica");
             Time.timeScale = 0f;
+            reviewPanel.SetActive(true);
         }
 
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi
