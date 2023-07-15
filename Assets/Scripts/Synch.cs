@@ -8,6 +8,7 @@ using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Note = Melanchall.DryWetMidi.Interaction.Note;
 using UnityEngine.Networking;
+using UnityEngine.XR.Interaction.Toolkit;
 
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
@@ -58,11 +59,18 @@ public class Synch : MonoBehaviour
     [SerializeField]
     private GameObject reviewPanel;
 
+    [SerializeField]
+    private XRInteractorLineVisual lineRendererLeft;
+
+    [SerializeField]
+    private XRInteractorLineVisual lineRendererRight;
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
 
-
+        lineRendererRight.enabled = false;
+        lineRendererLeft.enabled = false;
         reviewPanel.SetActive(false);
         _time = Time.deltaTime;
         
@@ -335,6 +343,8 @@ public class Synch : MonoBehaviour
             debugPanel.UpdateDebugText("Fine musica");
             Time.timeScale = 0f;
             reviewPanel.SetActive(true);
+            lineRendererLeft.enabled = true;
+            lineRendererRight.enabled = true;
         }
 
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi

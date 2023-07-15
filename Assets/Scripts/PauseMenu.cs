@@ -4,6 +4,7 @@ using UnityEngine.XR;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class PauseGame : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class PauseGame : MonoBehaviour
     [SerializeField]
     private GameObject pausePanel;
 
+    [SerializeField]
+    private XRInteractorLineVisual lineRendererLeft;
+
+    [SerializeField]
+    private XRInteractorLineVisual lineRendererRight;
     private void Start()
     {
         spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
@@ -66,6 +72,8 @@ public class PauseGame : MonoBehaviour
                 Time.timeScale = 0f;
                 // Mostra il pannello di pausa
                 pausePanel.SetActive(true);
+                lineRendererRight.enabled = true;
+                lineRendererLeft.enabled = true;
             }
         }
     }
@@ -78,6 +86,8 @@ public class PauseGame : MonoBehaviour
         spawn.musicSource.UnPause();
         // Mostra il pannello di countdown
         //countdownPanel.SetActive(true);
+        lineRendererRight.enabled = false;
+        lineRendererLeft.enabled = false;
         Time.timeScale = 1f;
         //CountdownCoroutine();
     }

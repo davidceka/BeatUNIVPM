@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.21264589, g: 0.21264589, b: 0.21264589, a: 1}
+  m_IndirectSpecularColor: {r: 0.21215841, g: 0.21215841, b: 0.21215841, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -157,6 +157,8 @@ MonoBehaviour:
   spawn: {fileID: 0}
   countdownPanel: {fileID: 392945959}
   pausePanel: {fileID: 387598381}
+  lineRendererLeft: {fileID: 1254735735}
+  lineRendererRight: {fileID: 609644220}
 --- !u!4 &12286892
 Transform:
   m_ObjectHideFlags: 0
@@ -763,6 +765,8 @@ MonoBehaviour:
   timeStamps: []
   beats: []
   reviewPanel: {fileID: 42327974}
+  lineRendererLeft: {fileID: 1254735735}
+  lineRendererRight: {fileID: 609644220}
 --- !u!1 &205069432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,7 +1654,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 609644217}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e988983f96fe1dd48800bcdfc82f23e9, type: 3}
   m_Name: 
@@ -3297,7 +3301,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254735732}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e988983f96fe1dd48800bcdfc82f23e9, type: 3}
   m_Name: 
