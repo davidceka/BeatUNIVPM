@@ -11,9 +11,9 @@ public class PauseGame : MonoBehaviour
     private bool isPaused = false;
     private DebugPanel debugPanel;
     private string debug;
-    private List<InputDevice> foundControllers;
     private bool isStartButtonPressed = false;
     private InputDevice device;
+    private List<InputDevice> foundControllers;
     private int cont = 0;
 
     public Synch spawn;

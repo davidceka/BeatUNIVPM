@@ -9,6 +9,7 @@ using Melanchall.DryWetMidi.Interaction;
 using Note = Melanchall.DryWetMidi.Interaction.Note;
 using UnityEngine.Networking;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR;
 
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
@@ -65,10 +66,13 @@ public class Synch : MonoBehaviour
     [SerializeField]
     private XRInteractorLineVisual lineRendererRight;
 
+    private InputDevice leftDevice;
+    private InputDevice rightDevice;
+    private List<InputDevice> foundControllers;
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
-
         lineRendererRight.enabled = false;
         lineRendererLeft.enabled = false;
         reviewPanel.SetActive(false);

@@ -25,7 +25,8 @@ public class Hit : MonoBehaviour
     private List<InputDevice> foundControllers;
     private bool isPrimaryButtonPressed = false;
     private bool isSecondaryButtonPressed = false;
-    private InputDevice device;
+    private InputDevice rightDevice;
+    private InputDevice leftDevice;
 
     // Secondo Gruppo
     public KeyCode button = KeyCode.Space;
@@ -52,6 +53,10 @@ public class Hit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
+
+
         debugPanel = FindObjectOfType<DebugPanel>();
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi
         spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
@@ -70,12 +75,18 @@ public class Hit : MonoBehaviour
 
         foundControllers = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(rightTrackedControllerFilter, foundControllers);
-        device = foundControllers[0];
-        debugPanel.UpdateDebugText(device.characteristics.ToString());
+        rightDevice = foundControllers[0];
+
+        InputDeviceCharacteristics leftTrackedControllerFilter = InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.TrackedDevice | InputDeviceCharacteristics.Left, leftHandedControllers;
+
+        foundControllers = new List<InputDevice>();
+        InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
+        leftDevice = foundControllers[0];
 
 
-        
-        
+
+
+
     }
 
     // Update is called once per frame
@@ -83,7 +94,7 @@ public class Hit : MonoBehaviour
     {
         //debugPanel.UpdateDebugText("isbuttonpressed:"+_isButtonPressed.ToString()+"\n isbuttonpressedA:"+_isButtonPressedA.ToString());
         // Rileva la pressione del tasto Spazio
-        if (device.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed &&!isSecondaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
+        if (rightDevice.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed &&!isSecondaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
             _isButtonPressed = true;
             //debugPanel.UpdateDebugText(_isButtonPressed.ToString()+"   primary button pressed");
@@ -93,13 +104,13 @@ public class Hit : MonoBehaviour
         }
 
         // Rileva il rilascio del tasto Spazio
-        if (device.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed)
+        if (rightDevice.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed)
         {
             _isButtonPressed = false;
         }
 
         // Rileva la pressione del tasto A
-        if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed &&!isPrimaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
+        if (rightDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed &&!isPrimaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
             
             _isButtonPressedA = true;
@@ -111,7 +122,7 @@ public class Hit : MonoBehaviour
 
         // Rileva il rilascio del tasto A
         // Rileva la pressione del tasto A
-        if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed)
+        if (rightDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out isSecondaryButtonPressed) && isSecondaryButtonPressed)
         {
             _isButtonPressedA = false;
         }
@@ -226,6 +237,8 @@ public class Hit : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Bomba")) // Se la collisione è con un cubo bomba
         {
+            rightDevice.SendHapticImpulse(0, 0.5f, 1);
+            leftDevice.SendHapticImpulse(0, 0.5f, 1);
             GameObject sphere = collision.gameObject; // Cubo bomba
             
             // inizializzo le particelle nella stessa posizione dei cubi
