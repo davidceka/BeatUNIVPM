@@ -215,7 +215,7 @@ public class Hit : MonoBehaviour
             if (swordColor == sphereColor)
             {
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
-                powerUp.IncreaseHealth(scoreManager.reward/20); // Incrementa la vita del giocatore
+                powerUp.IncreaseHealth(scoreManager.reward/10); // Incrementa la vita del giocatore
                 scoreManager.count += 1; // Incrementa il contatore combo di una unità
                 
                 // Incremento la barra dei power up, se non attivo un power up

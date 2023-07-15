@@ -70,6 +70,8 @@ public class Synch : MonoBehaviour
     private InputDevice rightDevice;
     private List<InputDevice> foundControllers;
 
+    private string selectedSong;
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
@@ -85,9 +87,27 @@ public class Synch : MonoBehaviour
         
         musicSource = GetComponent<AudioSource>(); // Ottiene il componente AudioSource
         
-        filename = "trace_test.txt";
+        selectedSong = PlayerPrefs.GetString("SelectedSong");
+        switch(selectedSong)
+        {
+            case "uprising":
+                filename = "uprising.txt";
+                midiname = "uprising.mid";
+                _musicname = "uprising.mp3";
+                break;
+            case "heatwaves":
+                filename = "heatwaves.txt";
+                midiname = "heatwaves.mid";
+                _musicname = "heatwaves.mp3";
+                break;
+            case "prova":
+                break;
 
-        _filepath = Path.Combine(Application.streamingAssetsPath, "uprising.txt");
+        }
+
+
+
+        _filepath = Path.Combine(Application.streamingAssetsPath, filename);
         UnityWebRequest www = UnityWebRequest.Get(_filepath);
 
         yield return www.SendWebRequest();
@@ -103,7 +123,7 @@ public class Synch : MonoBehaviour
         }
 
 
-        _midiPath = Path.Combine(Application.streamingAssetsPath, "Uprising_ok.mid");
+        _midiPath = Path.Combine(Application.streamingAssetsPath, midiname);
         www = UnityWebRequest.Get(_midiPath);
 
         yield return www.SendWebRequest();
@@ -127,7 +147,7 @@ public class Synch : MonoBehaviour
         GetNotesFromMidiFile();
         GetBeats(array);
 
-        _musicname = "muse_uprising.mp3";
+        
         _musicpath = Path.Combine(Application.streamingAssetsPath, _musicname);
         www = UnityWebRequestMultimedia.GetAudioClip(_musicpath, AudioType.MPEG);
 
