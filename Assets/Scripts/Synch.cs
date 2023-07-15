@@ -369,8 +369,12 @@ public class Synch : MonoBehaviour
             
             if (powerUp.activeSecond)
             {
-                sphere.GetComponent<Renderer>().material.color = Color.white;
-                sphere.GetComponent<Light>().color = Color.white;
+                if (sphere.GetComponent<Renderer>().material.color != Color.red)
+                {
+                    sphere.GetComponent<Renderer>().material.color = Color.white;
+                    sphere.GetComponent<Light>().color = Color.white;
+                }
+                
             }
             
             sphere.transform.Translate(Vector3.back * distanceToMove);

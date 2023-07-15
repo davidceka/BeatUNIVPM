@@ -31,7 +31,7 @@ public class PowerUp : MonoBehaviour
         
         // setta i valori di min e max degli slider
         slider.minValue = 0.3f;
-        slider.maxValue = 30f;
+        slider.maxValue = 100f;
 
         health.minValue = 0f;
         health.maxValue = 50f;
@@ -116,11 +116,11 @@ public class PowerUp : MonoBehaviour
     // Metodo che controlla lo stato della barra PowerUp e ne modifica il colore di conseguenza
     public void CheckColor()
     {
-        if (slider.value >= slider.minValue && slider.value <= 10.3f)
+        if (slider.value >= slider.minValue && slider.value <= 30.3f)
         {
             _fill.color = Color.red;
         }
-        else if (slider.value > 10.3f && slider.value <= slider.maxValue-1)
+        else if (slider.value > 30.3f && slider.value <= slider.maxValue-1)
         {
             _fill.color = Color.yellow;
         }

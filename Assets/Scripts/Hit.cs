@@ -87,7 +87,7 @@ public class Hit : MonoBehaviour
         {
             _isButtonPressed = true;
             //debugPanel.UpdateDebugText(_isButtonPressed.ToString()+"   primary button pressed");
-            scoreManager.reward = 1000;
+            scoreManager.reward = 20;
             powerUp.active = true;
 
         }
