@@ -173,7 +173,8 @@ public class Synch : MonoBehaviour
         scoreManager = FindObjectOfType<ScoreManager>();
 
 
-        debugPanel.UpdateDebugText(_filepath + "\n" + _musicpath + "\n"+_midiPath+ "\n" + "txt exists:" + File.Exists(_filepath).ToString() + "\n" + "midi exists:" + File.Exists(_midiPath).ToString());
+        //debugPanel.UpdateDebugText(_filepath + "\n" + _musicpath + "\n"+_midiPath+ "\n" + "txt exists:" + File.Exists(_filepath).ToString() + "\n" + "midi exists:" + File.Exists(_midiPath).ToString());
+        debugPanel.UpdateDebugText("Left Button: Pause Menu" + "\n" + "A: Score PowerUp" + "\n" + "B: Color PowerUp");
 
         /*#region provadebug
 
