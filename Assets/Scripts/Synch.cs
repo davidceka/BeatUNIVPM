@@ -104,11 +104,12 @@ public class Synch : MonoBehaviour
                 break;
 
         }
-
+        
 
 
         _filepath = Path.Combine(Application.streamingAssetsPath, filename);
         UnityWebRequest www = UnityWebRequest.Get(_filepath);
+
 
         yield return www.SendWebRequest();
 
@@ -170,6 +171,29 @@ public class Synch : MonoBehaviour
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi:
         powerUp = FindObjectOfType<PowerUp>();
         scoreManager = FindObjectOfType<ScoreManager>();
+
+
+        debugPanel.UpdateDebugText(_filepath + "\n" + _musicpath + "\n"+_midiPath+ "\n" + "txt exists:" + File.Exists(_filepath).ToString() + "\n" + "midi exists:" + File.Exists(_midiPath).ToString());
+
+        /*#region provadebug
+
+        using (WWW wwf = new WWW(_filepath))
+        {
+            yield return www;
+
+            if (string.IsNullOrEmpty(www.error))
+            {
+                debugPanel.UpdateDebugText("contenuto del file"+wwf.te);
+            }
+            else
+            {
+                
+            }
+        }
+
+        #endregion*/
+
+
     }
     
     // Metodo per prendere le note dal file midi (richiamato nello start)
