@@ -10,6 +10,8 @@ using Note = Melanchall.DryWetMidi.Interaction.Note;
 using UnityEngine.Networking;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
+using TMPro;
+
 
 
 // CLASSE PER LA GESTIONE DELLO SPAWNER
@@ -65,6 +67,15 @@ public class Synch : MonoBehaviour
 
     [SerializeField]
     private XRInteractorLineVisual lineRendererRight;
+
+    [SerializeField]
+    private TMP_Text textNotesHit;
+
+    [SerializeField]
+    private TMP_Text textPercentage;
+
+    [SerializeField]
+    private TMP_Text textRank;
 
     private InputDevice leftDevice;
     private InputDevice rightDevice;
@@ -391,11 +402,29 @@ public class Synch : MonoBehaviour
         _time += 1;
         if (!musicSource.isPlaying && _time > 5f && Time.timeScale!=0f)
         {
-            debugPanel.UpdateDebugText("Fine musica");
             Time.timeScale = 0f;
             reviewPanel.SetActive(true);
             lineRendererLeft.enabled = true;
             lineRendererRight.enabled = true;
+            textNotesHit.text = scoreManager.countNotesHit.ToString();
+            float percentage = (scoreManager.countNotesHit / array.Length) * 100f;
+            textPercentage.text = percentage.ToString();
+            if (percentage >= 90)
+            {
+                textRank.text = "Rank S!!!!!";
+            }
+            else if(percentage>=70 && percentage < 90)
+            {
+                textRank.text = "Rank A!!!!!";
+            }
+            else if (percentage >= 40 && percentage<70)
+            {
+                textRank.text = "Rank B!!!!!";
+            }
+            else if (percentage < 40)
+            {
+                textRank.text = "Rank C!!!!!";
+            }
         }
 
         // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi

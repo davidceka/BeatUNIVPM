@@ -217,11 +217,12 @@ public class Hit : MonoBehaviour
                 scoreManager.IncreaseScore(scoreManager.reward); // Incrementa il punteggio del giocatore
                 powerUp.IncreaseHealth(scoreManager.reward/10); // Incrementa la vita del giocatore
                 scoreManager.count += 1; // Incrementa il contatore combo di una unità
+                scoreManager.countNotesHit += 1;
                 
                 // Incremento la barra dei power up, se non attivo un power up
                 if (!powerUp.active && !powerUp.activeSecond)
                 {
-                    powerUp.IncreaseBar(scoreManager.reward);
+                    powerUp.IncreaseBar(2f);
                 }
             }
             else

@@ -10,6 +10,7 @@ public class ScoreManager : MonoBehaviour
     public int count = 0; // Contatore per il sistema di combo
     public int reward = 10; // Premio che si ottine per aver colpito un cubo con l'arma giusta
     public int penalty = 5; // Penalità per aver colpito un cubo con l'arma sbagliata
+    public int countNotesHit = 0;
     
     // Variabili utili all'aggiornamento dell'interfaccia di gioco
     private TMP_Text _scoreTextMesh;
