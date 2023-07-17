@@ -113,7 +113,10 @@ public class Synch : MonoBehaviour
                 midiname = "heatwaves.mid";
                 _musicname = "heatwaves.mp3";
                 break;
-            case "prova":
+            case "sunflower":
+                filename = "sunflower.txt";
+                midiname = "sunflower.mid";
+                _musicname = "sunflower.mp3";
                 break;
 
         }
