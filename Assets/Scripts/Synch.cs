@@ -72,9 +72,11 @@ public class Synch : MonoBehaviour
 
     private string selectedSong;
 
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        Time.timeScale = 1f;
         lineRendererRight.enabled = false;
         lineRendererLeft.enabled = false;
         reviewPanel.SetActive(false);

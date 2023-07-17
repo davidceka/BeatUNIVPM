@@ -13,13 +13,14 @@ public class SceneLoader : MonoBehaviour
     // Start is called before the first frame update
     public void LoadGameScene()
     {
-        SceneManager.LoadScene("Game");
         Time.timeScale = 1f;
+        SceneManager.LoadScene("Game");
     }
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
         Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+      
     }
     public void QuitGame()
     {

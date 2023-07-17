@@ -83,13 +83,12 @@ public class PauseGame : MonoBehaviour
         isPaused = false;
         
         pausePanel.SetActive(false);
-        spawn.musicSource.UnPause();
+        
         // Mostra il pannello di countdown
-        //countdownPanel.SetActive(true);
-        lineRendererRight.enabled = false;
-        lineRendererLeft.enabled = false;
-        Time.timeScale = 1f;
-        //CountdownCoroutine();
+        countdownPanel.SetActive(true);
+        
+        //Time.timeScale = 1f;
+        StartCoroutine(CountdownCoroutine());
     }
 
     private IEnumerator CountdownCoroutine()
@@ -100,12 +99,15 @@ public class PauseGame : MonoBehaviour
         while (countdownValue > 0)
         {
             countdownText.text = countdownValue.ToString();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSecondsRealtime(1f);
             countdownValue--;
         }
 
         // Riprendi la scena
         countdownPanel.SetActive(false);
+        lineRendererRight.enabled = false;
+        lineRendererLeft.enabled = false;
+        spawn.musicSource.UnPause();
         Time.timeScale = 1f;
     }
 
