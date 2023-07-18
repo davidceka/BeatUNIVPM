@@ -410,8 +410,8 @@ public class Synch : MonoBehaviour
             lineRendererLeft.enabled = true;
             lineRendererRight.enabled = true;
             textNotesHit.text = scoreManager.countNotesHit.ToString();
-            float percentage = (scoreManager.countNotesHit / array.Length) * 100f;
-            textPercentage.text = percentage.ToString();
+            float percentage = Mathf.Round((scoreManager.countNotesHit * 100f) / array.Length);
+            textPercentage.text = "% Notes hit:"+percentage.ToString()+"%";
             if (percentage >= 90)
             {
                 textRank.text = "Rank S!!!!!";
