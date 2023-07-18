@@ -82,6 +82,8 @@ public class Synch : MonoBehaviour
     private List<InputDevice> foundControllers;
 
     private string selectedSong;
+    
+    private int _count = 0;
 
 
     // Start is called before the first frame update
@@ -148,12 +150,11 @@ public class Synch : MonoBehaviour
         if (www.result == UnityWebRequest.Result.Success)
         {
             byte[] fileContent = www.downloadHandler.data;
-            //debugPanel.UpdateDebugText("Contenuto del file: " + fileContent);
+            
             using (var memoryStream = new MemoryStream(fileContent))
             {
                 midiFile = MidiFile.Read(memoryStream);
                 // Esegui l'elaborazione delle note o qualsiasi altra logica desiderata
-                //debugPanel.UpdateDebugText(midiFile.GetType().ToString());
 
             }
         }
@@ -175,7 +176,6 @@ public class Synch : MonoBehaviour
             AudioClip audioClip = DownloadHandlerAudioClip.GetContent(www);
             musicSource.clip = audioClip;
             musicSource.Play();
-            //debugPanel.UpdateDebugText("file musicale: " + _musicname);
         }
         else
         {
@@ -189,27 +189,7 @@ public class Synch : MonoBehaviour
         scoreManager = FindObjectOfType<ScoreManager>();
 
 
-        //debugPanel.UpdateDebugText(_filepath + "\n" + _musicpath + "\n"+_midiPath+ "\n" + "txt exists:" + File.Exists(_filepath).ToString() + "\n" + "midi exists:" + File.Exists(_midiPath).ToString());
         debugPanel.UpdateDebugText("Left Button: Pause Menu" + "\n" + "A: Score PowerUp" + "\n" + "B: Color PowerUp");
-
-        /*#region provadebug
-
-        using (WWW wwf = new WWW(_filepath))
-        {
-            yield return www;
-
-            if (string.IsNullOrEmpty(www.error))
-            {
-                debugPanel.UpdateDebugText("contenuto del file"+wwf.te);
-            }
-            else
-            {
-                
-            }
-        }
-
-        #endregion*/
-
 
     }
     
@@ -250,7 +230,6 @@ public class Synch : MonoBehaviour
         }
 
         double previousTimestamp = timeStamps[0];
-        //beats.Add(previousTimestamp);
 
         for (int i = 1; i < timeStamps.Count; i++)
         {
@@ -263,13 +242,11 @@ public class Synch : MonoBehaviour
 
             previousTimestamp = currentTimestamp;
         }
-        Debug.Log(beats.Count); // Da togliere a fine progetto
     }
 
     // Coroutine per la lettura del file txt e l'avvio del pattern descritto
     private IEnumerator SpawnSphereCoroutine()
     {
-        int count = 0;
         //while (true) // la courutine in questo modo continuerà a ripetere il pattern finchè non si ferma la musica
         //string[] lines = File.ReadAllLines(_filepath);
         string[] lines = fileContent.Split('\n');
@@ -284,6 +261,11 @@ public class Synch : MonoBehaviour
                     if (data.Length == 2)
                     {
                         int sphereindex = int.Parse(data[0]);
+
+                        if (sphereindex == 0 || sphereindex == 1)
+                        {
+                            _count += 1; //conteggio dei cubi che vengono istanziati (potrebbero essere anche più delle note)
+                        }
                         
                         // Rimuovi parentesi quadre e separa le coordinate
                         string[] coordinates = data[1].Trim('[', ']').Split(',');
@@ -309,6 +291,15 @@ public class Synch : MonoBehaviour
                     {
                         int sphereindex1 = int.Parse(data[0]);
                         int sphereindex2 = int.Parse(data[2]);
+                        
+                        if (sphereindex1 == 0 || sphereindex1 == 1)
+                        {
+                            _count += 1; //conteggio dei cubi che vengono istanziati (potrebbero essere anche più delle note)
+                        }
+                        if (sphereindex2 == 0 || sphereindex2 == 1)
+                        {
+                            _count += 1; //conteggio dei cubi che vengono istanziati (potrebbero essere anche più delle note)
+                        }
                         
                         // Rimuovi parentesi quadre e separa le coordinate
                         string[] coordinates1 = data[1].Trim('[', ']').Split(',');
@@ -351,8 +342,6 @@ public class Synch : MonoBehaviour
                     //yield return new WaitForSeconds(_beat);
                         
                     yield return new WaitForSeconds((float)beat);
-                    count += 1;
-                    //debugPanel.UpdateDebugText(count.ToString());
             }
             
             StopCoroutine(_spawnCoroutine);
@@ -364,39 +353,6 @@ public class Synch : MonoBehaviour
         sphere = Instantiate(spheres[index], point, Quaternion.identity);
         spawnedSpheres.Add(sphere); // Il cubo creato viene aggiunto alla lista di elementi
     }
-    
-/*
-    private IEnumerator SpawnSphereCoroutine()
-    {
-        while (true)
-        {
-            SpawnSphereTest();
-            // Espressione che viene utilizzata all'interno di un metodo coroutine
-            // in Unity per creare un ritardo di tempo specifico (in questo caso, il beat)
-            yield return new WaitForSeconds(beat);
-        }
-    }
-
-    // Istanza una nuovo cubo
-    private void SpawnSphere()
-    {
-        // Il cubo si genera randomicamente da uno dei punti di spawn
-        GameObject sphere;
-        int randomNumber = UnityEngine.Random.Range(0, 101);
-        if (randomNumber >= 0 && randomNumber <= 10)
-            sphere = Instantiate(spheres[2], points[Random.Range(0, points.Length)]);
-        else if (randomNumber >=11 && randomNumber <= 55)
-            sphere = Instantiate(spheres[1], points[Random.Range(0, points.Length)]);
-        else
-            sphere = Instantiate(spheres[0], points[Random.Range(0, points.Length)]);
-
-        sphere.transform.localPosition = Vector3.zero;
-        // Lo spawn può avvenire con un angolazione diversa
-        sphere.transform.Rotate(Vector3.forward, 90f * Random.Range(0, 4));
-
-        spawnedSpheres.Add(sphere); // Il cubo creato viene aggiunto alla lista di elementi
-    }
-*/
 
     // Update is called once per frame
     void Update()
@@ -410,8 +366,8 @@ public class Synch : MonoBehaviour
             lineRendererLeft.enabled = true;
             lineRendererRight.enabled = true;
             textNotesHit.text = scoreManager.countNotesHit.ToString();
-            float percentage = Mathf.Round((scoreManager.countNotesHit * 100f) / array.Length);
-            textPercentage.text = "% Notes hit:"+percentage.ToString()+"%";
+            float percentage = Mathf.Round((scoreManager.countNotesHit * 100f) / _count);
+            textPercentage.text = percentage.ToString()+"%";
             if (percentage >= 90)
             {
                 textRank.text = "Rank S!!!!!";
@@ -429,23 +385,7 @@ public class Synch : MonoBehaviour
                 textRank.text = "Rank C!!!!!";
             }
         }
-
-        // Controlla lo stato di riproduzione della musica e interrompe/riavvia la coroutine di spawn dei cubi
-        /*
-        if (!startCoroutine && _spawnCoroutine == null)
-        {
-            _spawnCoroutine = StartCoroutine(SpawnSphereCoroutine());
-            startCoroutine = true;
-        }
-        */
-        /*
-        else if (!musicSource.isPlaying && _spawnCoroutine != null)
-        {
-            Debug.Log("stop");
-            StopCoroutine(_spawnCoroutine);
-            _spawnCoroutine = null;
-        }
-        */
+        
     }
 
     // Metodo per far muovere i cubi verso il giocatore

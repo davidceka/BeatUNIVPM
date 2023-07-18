@@ -53,10 +53,6 @@ public class Hit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
-
-
         debugPanel = FindObjectOfType<DebugPanel>();
         // Si dichiara dove trovare i riferimenti agli oggetti delle altre classi
         spawn = GameObject.FindGameObjectWithTag("Respawn").GetComponent<Synch>();
@@ -82,11 +78,6 @@ public class Hit : MonoBehaviour
         foundControllers = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(leftTrackedControllerFilter, foundControllers);
         leftDevice = foundControllers[0];
-
-
-
-
-
     }
 
     // Update is called once per frame
@@ -97,7 +88,6 @@ public class Hit : MonoBehaviour
         if (rightDevice.TryGetFeatureValue(CommonUsages.primaryButton, out isPrimaryButtonPressed) && isPrimaryButtonPressed &&!isSecondaryButtonPressed && powerUp.slider.value >= powerUp.slider.maxValue - 0.1f)
         {
             _isButtonPressed = true;
-            //debugPanel.UpdateDebugText(_isButtonPressed.ToString()+"   primary button pressed");
             scoreManager.reward = 20;
             powerUp.active = true;
 
@@ -114,7 +104,6 @@ public class Hit : MonoBehaviour
         {
             
             _isButtonPressedA = true;
-            //debugPanel.UpdateDebugText(_isButtonPressedA.ToString() + "   secondary button pressed");
             _swordLeft.material.color = Color.white;
             _swordRight.material.color = Color.white;
             powerUp.activeSecond = true;
@@ -179,7 +168,6 @@ public class Hit : MonoBehaviour
                     {
                         cube.GetComponent<Renderer>().material.color = _colorLeft;
                     }
-                    //cube.GetComponent<Renderer>().material.color = Color.white;
                 }
                 _swordLeft.material.color = _colorLeft;
                 _swordRight.material.color = _colorRight;
