@@ -29,8 +29,6 @@ public class Hit : MonoBehaviour
     private InputDevice leftDevice;
 
     // Secondo Gruppo
-    public KeyCode button = KeyCode.Space;
-    public KeyCode buttonA = KeyCode.A;
     private bool _isButtonPressed = false; // Per capire se il tasto è premuto
     private bool _isButtonPressedA = false;
     
@@ -46,9 +44,6 @@ public class Hit : MonoBehaviour
     private Renderer _swordLeft;
     private Color _colorRight;
     private Color _colorLeft;
-
-
-    string debug;
 
     // Start is called before the first frame update
     void Start()

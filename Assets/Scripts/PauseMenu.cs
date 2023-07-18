@@ -14,7 +14,6 @@ public class PauseGame : MonoBehaviour
     private bool isStartButtonPressed = false;
     private InputDevice device;
     private List<InputDevice> foundControllers;
-    private int cont = 0;
 
     public Synch spawn;
 

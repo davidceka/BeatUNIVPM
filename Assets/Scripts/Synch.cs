@@ -29,7 +29,6 @@ public class Synch : MonoBehaviour
     public GameObject[] spheres;
     public GameObject sphere;
     public List<GameObject> spawnedSpheres = new List<GameObject>(); // Lista dei cubi istanziati
-    public Transform[] points;
     public string filename; // Nome del file da cui leggere il pattern
     private string _filepath; // Percorso del file da cui leggere il pattern
     public float moveSpeed; // Velocità di movimento dei cubi
@@ -42,16 +41,12 @@ public class Synch : MonoBehaviour
     public AudioSource musicSource; // Componente AudioSource per la musica
     private string _musicpath;
     private string _musicname;
-    public bool musicPlaying = false;
     private Coroutine _spawnCoroutine; // Riferimento alla coroutine di spawn delle sfere
-    public bool startCoroutine = false;
-    //private float _beat = (60f / 105f) * 2f;
-    
+
     // Gruppo di variabile utilizzate per la gestione del ritmo di spawn
     public MidiFile midiFile;
     public string midiname;
     private string _midiPath;
-    public Melanchall.DryWetMidi.MusicTheory.NoteName noteRestriction;
     List<Note> notes = new List<Note>();
     private Melanchall.DryWetMidi.Interaction.Note[] array;
     public List<double> timeStamps = new List<double>();
